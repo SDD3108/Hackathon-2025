@@ -1,5 +1,5 @@
 import React from "react";
-import MainPageBuilder from "@/pageBuilders/MainPageBuilder/MainPageBuilder";
+import MainPageBuilder from "@/src/pageBuilders/MainPageBuilder/MainPageBuilder";
 
 export default function Home() {
   return (

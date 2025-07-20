@@ -1,9 +1,10 @@
 import React from 'react'
+import AuthenticationFormComponent from '@/src/components/AuthenticationFormComponent/AuthenticationFormComponent'
 
 const SignUpPageBuilder = () => {
   return (
     <div>
-      SignUpPageBuilder
+      <AuthenticationFormComponent type='signup'/>
     </div>
   )
 }

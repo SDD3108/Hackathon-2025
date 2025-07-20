@@ -1,5 +1,5 @@
 import React from 'react'
-import SignInPageBuilder from '@/pageBuilders/SignInPageBuilder/SignInPageBuilder'
+import SignInPageBuilder from '@/src/pageBuilders/SignInPageBuilder/SignInPageBuilder'
 
 const SignInPage = () => {
   return (

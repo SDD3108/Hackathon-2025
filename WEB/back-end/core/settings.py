@@ -33,6 +33,7 @@ ALLOWED_HOSTS = [
     'localhost',
     '127.0.0.1',
     'anothergenback.onrender.com',
+    'hackathon-2025-p443.vercel.app',
 ]
 
 

@@ -1,6 +1,6 @@
 from djoser.serializers import UserCreateSerializer as BaseUserCreateSerializer, UserSerializer as BaseUserSerializer
 from rest_framework import serializers
-from .models import User, Group
+from .models import User, Group, Subject, Lecture
 
 class UserCreateSerializer(BaseUserCreateSerializer):
     class Meta(BaseUserCreateSerializer.Meta):
@@ -17,4 +17,19 @@ class UserSerializer(BaseUserSerializer):
     group = serializers.StringRelatedField()
     class Meta(BaseUserSerializer.Meta):
         model = User
-        fields = ('id', 'email', 'name', 'surname', 'avatar', 'is_teacher', 'is_student', 'is_admin', 'group') 
+        fields = ('id', 'email', 'name', 'surname', 'avatar', 'is_teacher', 'is_student', 'is_admin', 'group')
+
+class GroupSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Group
+        fields = '__all__'
+
+class SubjectSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Subject
+        fields = '__all__'
+
+class LectureSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Lecture
+        fields = '__all__' 

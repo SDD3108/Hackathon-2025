@@ -3,6 +3,7 @@
     --breakpoint-2xs: 16rem;
     --breakpoint-xs: 24rem;
     --breakpoint-2sm: 32rem;
+    --color-accentColor:#0097A9;
 }
 *{
     font-family: "Roboto", sans-serif;

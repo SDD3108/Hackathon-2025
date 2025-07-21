@@ -9,4 +9,5 @@ const SignInPage = () => {
   )
 }
 
+export const dynamic = "force-dynamic";
 export default SignInPage

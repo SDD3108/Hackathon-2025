@@ -36,6 +36,11 @@ ALLOWED_HOSTS = [
     'hackathon-2025-p443.vercel.app',
 ]
 
+CORS_ALLOWED_ORIGINS = [
+    "anothergenback.onrender.com",
+    "https://hackathon-2025-p443.vercel.app",
+]    
+
 
 # Application definition
 
@@ -47,6 +52,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'corsheaders',
     'djoser',
     'app',
 ]
@@ -60,6 +66,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = 'core.urls'

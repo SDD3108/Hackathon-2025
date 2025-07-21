@@ -7,13 +7,22 @@ const MainPageBuilder = () => {
   const getDatas = async()=>{
     try {
       const student = {
-        "email": '1test@gmail.com',
-        "password": '12345',
-        "name": 'damirr',
-        "surname": 'satimovv',
-        "is_teacher": true,
+        email: "test@gmail.com",
+        password: "1234",
+        name: "damir",
+        surname: "satimov",
+        avatar: null,
+        is_teacher: false,
+        is_student: false,
+        is_admin: false,
+        group: null,
+        username: "dama"
       }
-      const resp = await axios.post('https://anothergenback.onrender.com/auth/users',student)
+      const resp = await axios.post('https://anothergenback.onrender.com/auth/users',student,
+        {
+          headers: { 'Content-Type': 'application/json' }
+        }
+      )
       console.log(resp);
       console.log(resp.data)
     }

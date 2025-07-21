@@ -269,16 +269,16 @@ const AuthenticationFormComponent = ({type})=>{
                       )}/>
                     )}
 
-                    <Button type="submit" className="w-full bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-600 hover:to-blue-600 text-white font-medium py-6 rounded-xl transition-all transform hover:scale-[1.02] shadow-lg shadow-cyan-500/20 relative overflow-hidden" disabled={loading}>
+                    <Button type="submit" className="w-full bg-zinc-300 hover:from-cyan-600 hover:to-blue-600 text-white font-medium py-6 rounded-xl transition-all transform hover:scale-[1.02] shadow-lg shadow-cyan-500/20 relative overflow-hidden" disabled={loading}>
                       <div className="absolute inset-0 bg-gradient-to-r from-white/30 to-transparent opacity-0 hover:opacity-100 transition-opacity"></div>
                       {loading ? (
                         <motion.div animate={{rotate:360}} transition={{duration:1,repeat: Infinity}} className="flex items-center justify-center">
                           <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                          {type == 'signup' ? 'Creating Account...' : 'Signing In...'}
+                          {type == 'signup' ? 'Creating Account...' : 'Log In...'}
                         </motion.div>
                       ) : (
                         <motion.div whileHover={{scale:1.05}} className="flex items-center justify-center">
-                          {type == 'signup' ? 'CREATE ACCOUNT' : 'ACCESS SYSTEM'}
+                          {type == 'signup' ? 'CREATE ACCOUNT' : 'LOG IN'}
                         </motion.div>
                       )}
                     </Button>

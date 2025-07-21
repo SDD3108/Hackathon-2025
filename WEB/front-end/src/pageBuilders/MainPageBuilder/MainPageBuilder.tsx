@@ -8,7 +8,7 @@ const MainPageBuilder = () => {
     try {
       const student = {
         email: "test@gmail.com",
-        password: "1234",
+        password: "1234PasswordTest.",
         name: "damir",
         surname: "satimov",
         avatar: null,

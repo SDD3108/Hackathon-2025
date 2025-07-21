@@ -18,7 +18,7 @@ const MainPageBuilder = () => {
         group: null,
         username: "dama"
       }
-      const resp = await axios.post('https://anothergenback.onrender.com/auth/users',student,
+      const resp = await axios.post('https://anothergenback.onrender.com/auth/users/',student,
         {
           headers: { 'Content-Type': 'application/json' }
         }

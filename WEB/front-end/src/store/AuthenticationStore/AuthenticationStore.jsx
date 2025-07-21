@@ -1,4 +1,3 @@
-import React from 'react'
 import { create } from 'zustand'
 import axios from 'axios'
 
@@ -6,7 +5,7 @@ const useAuthenticationStore = create((set)=>({
   user:null,
   loading:false,
   error:null,
-  signUp: async(data:any)=>{
+  signUp: async(data)=>{
     set({loading:true, error:null})
     try {
       await axios.post('')
@@ -18,7 +17,7 @@ const useAuthenticationStore = create((set)=>({
       return false
     }
   },
-  signIn: async(data:any)=>{
+  signIn: async(data)=>{
     set({loading:true, error:null})
     try{
       await axios.get('')

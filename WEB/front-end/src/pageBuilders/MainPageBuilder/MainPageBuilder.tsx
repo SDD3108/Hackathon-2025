@@ -4,7 +4,6 @@ import axios from 'axios'
 import { Button } from '@/src/ui/button'
 
 const MainPageBuilder = () => {
-  const [datas,setDatas] = useState()
   const getDatas = async()=>{
     try {
       const student = {

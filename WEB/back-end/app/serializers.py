@@ -1,0 +1,20 @@
+from djoser.serializers import UserCreateSerializer as BaseUserCreateSerializer, UserSerializer as BaseUserSerializer
+from rest_framework import serializers
+from .models import User, Group
+
+class UserCreateSerializer(BaseUserCreateSerializer):
+    class Meta(BaseUserCreateSerializer.Meta):
+        model = User
+        fields = ('id', 'email', 'password', 'name', 'surname', 'avatar', 'is_teacher', 'is_student', 'is_admin', 'group', 'username')
+        extra_kwargs = {'username': {'required': False}}
+
+    def create(self, validated_data):
+        if not validated_data.get('username'):
+            validated_data['username'] = validated_data['email']
+        return super().create(validated_data)
+
+class UserSerializer(BaseUserSerializer):
+    group = serializers.StringRelatedField()
+    class Meta(BaseUserSerializer.Meta):
+        model = User
+        fields = ('id', 'email', 'name', 'surname', 'avatar', 'is_teacher', 'is_student', 'is_admin', 'group') 

@@ -36,14 +36,18 @@ ALLOWED_HOSTS = [
     'hackathon-2025-six.vercel.app',
 ]
 
-CORS_ALLOWED_ORIGINS = [
-    "https://anothergenback.onrender.com",
-    "https://hackathon-2025-six.vercel.app",
-]
+# Разрешить CORS для всех (НЕ использовать в продакшене!)
+CORS_ALLOW_ALL_ORIGINS = True
+# Правильная настройка для продакшена:
+# CORS_ALLOWED_ORIGINS = [
+#     "https://anothergenback.onrender.com",
+#     "https://hackathon-2025-six.vercel.app",
+# ]
 CORS_ALLOW_CREDENTIALS = True
-CSRF_TRUSTED_ORIGINS = [
-    "https://hackathon-2025-six.vercel.app",
-]
+# Для защищённых запросов с куками/авторизацией:
+# CSRF_TRUSTED_ORIGINS = [
+#     "https://hackathon-2025-six.vercel.app",
+# ]
 
 
 # Application definition

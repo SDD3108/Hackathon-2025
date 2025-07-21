@@ -33,16 +33,16 @@ ALLOWED_HOSTS = [
     'localhost',
     '127.0.0.1',
     'anothergenback.onrender.com',
-    'hackathon-2025-p443.vercel.app',
+    'hackathon-2025-six.vercel.app',
 ]
 
 CORS_ALLOWED_ORIGINS = [
     "https://anothergenback.onrender.com",
-    "https://hackathon-2025-p443.vercel.app",
+    "https://hackathon-2025-six.vercel.app",
 ]
 CORS_ALLOW_CREDENTIALS = True
 CSRF_TRUSTED_ORIGINS = [
-    "https://hackathon-2025-p443.vercel.app",
+    "https://hackathon-2025-six.vercel.app",
 ]
 
 

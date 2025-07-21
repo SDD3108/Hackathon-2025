@@ -38,11 +38,11 @@ ALLOWED_HOSTS = [
 
 CORS_ALLOWED_ORIGINS = [
     "https://anothergenback.onrender.com",
-    "https://hackathon-2025-six.vercel.app/",
+    "https://hackathon-2025-six.vercel.app",
 ]
 CORS_ALLOW_CREDENTIALS = True
 CSRF_TRUSTED_ORIGINS = [
-    "https://hackathon-2025-six.vercel.app/",
+    "https://hackathon-2025-six.vercel.app",
 ]
 
 

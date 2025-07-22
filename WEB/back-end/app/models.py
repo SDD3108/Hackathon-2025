@@ -50,9 +50,20 @@ class Lecture(models.Model):
     video = models.FileField(upload_to='videos/', blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
+
     def __str__(self):
         return f"{self.subject.title} - {self.created_at}"
 
+
+from django.db import models
+
+class Src(models.Model):
+    num = models.IntegerField()
+    url = models.URLField()
+    lecture = models.ForeignKey('Lecture', on_delete=models.CASCADE, related_name='srcs')
+
+    def __str__(self):
+        return f"Src {self.num} for Lecture {self.lecture.id}"
 
 
 

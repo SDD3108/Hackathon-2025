@@ -43,9 +43,11 @@ class Subject(models.Model):
 
 
 class Lecture(models.Model):
+    title = models.CharField(max_length=100)
     subject = models.ForeignKey(Subject, on_delete=models.CASCADE, related_name='lectures')
     teacher = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, limit_choices_to={'is_teacher': True}, related_name='lectures')
     lecture_text = models.TextField()
+    video = models.FileField(upload_to='videos/', blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

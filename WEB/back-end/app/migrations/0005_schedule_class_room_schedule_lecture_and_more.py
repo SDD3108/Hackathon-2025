@@ -10,8 +10,8 @@ class Migration(migrations.Migration):
     dependencies = [
         ('app', '0004_schedule_date'),
     ]
-
     operations = [
+        
         migrations.AddField(
             model_name='schedule',
             name='lecture',

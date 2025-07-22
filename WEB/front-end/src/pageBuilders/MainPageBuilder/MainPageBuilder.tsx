@@ -2,6 +2,7 @@
 import React,{useState} from 'react'
 import axios from 'axios'
 import { Button } from '@/src/ui/button'
+import MainScheduleComponent from '@/src/components/MainScheduleComponent/MainScheduleComponent'
 
 const MainPageBuilder = () => {
   const getDatas = async()=>{
@@ -18,11 +19,7 @@ const MainPageBuilder = () => {
         group: null,
         username: "dama"
       }
-      const resp = await axios.post('https://anothergenback.onrender.com/auth/users/',student,
-        {
-          headers: { 'Content-Type': 'application/json' }
-        }
-      )
+      const resp = await axios.get('https://anothergenback.onrender.com/auth/users/')
       console.log(resp);
       console.log(resp.data)
     }
@@ -36,11 +33,14 @@ const MainPageBuilder = () => {
         console.error(error)
       }
     }
-  } 
+  }
   return (
-    <div>
-      MainPageBuilder
-      <Button onClick={getDatas}>post</Button>
+    <div className='w-full h-screen flex justify-between'>
+      <div>
+        MainPageBuilder
+        <Button onClick={getDatas}>post</Button>
+      </div>
+      <MainScheduleComponent/>
     </div>
   )
 }

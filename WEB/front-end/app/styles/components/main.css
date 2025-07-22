@@ -4,7 +4,31 @@
     --breakpoint-xs: 24rem;
     --breakpoint-2sm: 32rem;
     --color-accentColor:#0097A9;
+    --color-mainColor:#1C1C1C;
+    --color-newWhite:#d9d9d9;
+    --color-glassBg:rgba(255,255,255,0.06);
+    --shadow-custom:
+    inset 2px 2px 2px 0 #fff,0 17px 23px 0 rgba(42, 42, 42, 0.36),
+    inset 6px 6px 26px 0 rgba(255, 255, 255, 0.4),
+    inset -3px -3px 3px 0 rgba(255, 255, 255, 0.3);
+    --color-firstBlue: rgba(120, 120, 128, 0.1);
+    --color-secondBlue:#0a2139;
+    --color-thirdBlue:#0042c2;
+}
+@font-face {
+    font-family: 'SF Pro Display';
+    src: url('/fonts/SFPro/SFPRODISPLAYREGULAR.OTF') format('truetype');
+    font-weight: 400;
+    font-style: normal;
+}
+  
+@font-face {
+    font-family: 'SF Pro Display';
+    src: url('/fonts/SFPro/SFPRODISPLAYBOLD.OTF') format('truetype');
+    font-weight: 700;
+    font-style: normal;
 }
 *{
-    font-family: "Roboto", sans-serif;
+    /* font-family: "Roboto", sans-serif; */
+    font-family: 'SF Pro Display', sans-serif;
 }

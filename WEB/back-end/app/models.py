@@ -66,8 +66,10 @@ class Schedule(models.Model):
     ]
 
     subject = models.ForeignKey(Subject, on_delete=models.CASCADE, related_name='schedule_entries')
-    group = models.ForeignKey('Group', on_delete=models.CASCADE, related_name='schedule_entries')
+    group = models.ForeignKey(Group, on_delete=models.CASCADE, related_name='schedule_entries',default=1)
+    lecture = models.ForeignKey(Lecture, on_delete=models.CASCADE, related_name='schedule_entries')
     day = models.CharField(max_length=3, choices=DAYS_OF_WEEK)
+    class_room = models.CharField(max_length=255)
     date = models.DateField()
 
     def __str__(self):

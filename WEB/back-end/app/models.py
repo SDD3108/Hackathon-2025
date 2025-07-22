@@ -3,6 +3,7 @@ from django.contrib.auth.models import AbstractUser
 from django.conf import settings
 from PIL import Image
 
+
 class Group(models.Model):
     name = models.CharField(max_length=255)
     garde = models.CharField(max_length=255)
@@ -10,6 +11,8 @@ class Group(models.Model):
 
     def __str__(self):
         return self.name
+
+        
 
 class User(AbstractUser):
     username = models.CharField(max_length=150, unique=True, blank=True, null=True)
@@ -28,13 +31,16 @@ class User(AbstractUser):
     def __str__(self):
         return self.email
 
+
+
+
+
 class Subject(models.Model):
-    title = models.CharField(max_length=255)
-    teacher = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, limit_choices_to={'is_teacher': True}, related_name='subjects')
-    groups = models.ManyToManyField(Group, related_name='subjects_in_group', blank=True)
+    name = models.CharField(max_length=100)
 
     def __str__(self):
-        return self.title
+        return self.name
+
 
 class Lecture(models.Model):
     subject = models.ForeignKey(Subject, on_delete=models.CASCADE, related_name='lectures')
@@ -44,3 +50,25 @@ class Lecture(models.Model):
 
     def __str__(self):
         return f"{self.subject.title} - {self.created_at}"
+
+
+
+
+class Schedule(models.Model):
+    DAYS_OF_WEEK = [
+        ('MON', 'Понедельник'),
+        ('TUE', 'Вторник'),
+        ('WED', 'Среда'),
+        ('THU', 'Четверг'),
+        ('FRI', 'Пятница'),
+        ('SAT', 'Суббота'),
+        ('SUN', 'Воскресенье'),
+    ]
+
+    subject = models.ForeignKey(Subject, on_delete=models.CASCADE, related_name='schedule_entries')
+    group = models.ForeignKey('Group', on_delete=models.CASCADE, related_name='schedule_entries')
+    day = models.CharField(max_length=3, choices=DAYS_OF_WEEK)
+    date = models.DateField()
+
+    def __str__(self):
+        return f'{self.subject.name} - {self.group.name} - {self.get_day_display()} {self.time}'

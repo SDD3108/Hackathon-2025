@@ -4,7 +4,7 @@ import AuthenticationFormComponent from '@/src/components/AuthenticationFormComp
 const SignInPageBuilder = () => {
   return (
     <div>
-      <AuthenticationFormComponent type='signin'/>
+      <AuthenticationFormComponent/>
     </div>
   )
 }

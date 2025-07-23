@@ -9,4 +9,6 @@ const SignUpPage = () => {
   )
 }
 
+export const dynamic = "force-dynamic";
+
 export default SignUpPage

@@ -5,13 +5,14 @@ from django.urls import include
 from django.conf import settings
 from django.conf.urls.static import static
 from rest_framework.routers import DefaultRouter
-from app.views import GroupViewSet, SubjectViewSet, LectureViewSet, ScheduleViewSet
+from app.views import GroupViewSet, SubjectViewSet, LectureViewSet, ScheduleViewSet, UserView
 
 router = DefaultRouter()
 router.register(r'groups', GroupViewSet, basename='group')
 router.register(r'subjects', SubjectViewSet, basename='subject')
 router.register(r'lectures', LectureViewSet, basename='lecture')
 router.register(r'schedules', ScheduleViewSet, basename='schedule')
+router.register(r'users', UserView, basename='user')
 
 urlpatterns = [
     path('admin/', admin.site.urls),

@@ -3,8 +3,8 @@
 from django.shortcuts import render
 from rest_framework import viewsets, filters
 from rest_framework.parsers import MultiPartParser, FormParser
-from .models import Group, Subject, Lecture, Schedule
-from .serializers import GroupSerializer, SubjectSerializer, LectureSerializer, ScheduleSerializer
+from .models import Group, Subject, Lecture, Schedule, User
+from .serializers import GroupSerializer, SubjectSerializer, LectureSerializer, ScheduleSerializer, UserSerializer
 
 class GroupViewSet(viewsets.ModelViewSet):
     queryset = Group.objects.all()
@@ -13,6 +13,10 @@ class GroupViewSet(viewsets.ModelViewSet):
 class SubjectViewSet(viewsets.ModelViewSet):
     queryset = Subject.objects.all()
     serializer_class = SubjectSerializer
+
+class UserView(viewsets.ModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
 
 class LectureViewSet(viewsets.ModelViewSet):
     queryset = Lecture.objects.all()

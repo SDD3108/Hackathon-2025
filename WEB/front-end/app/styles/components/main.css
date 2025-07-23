@@ -14,6 +14,7 @@
     --color-firstBlue: rgba(120, 120, 128, 0.1);
     --color-secondBlue:#0a2139;
     --color-thirdBlue:#0042c2;
+    --color-firstGray:#a0a0a0;
 }
 @font-face {
     font-family: 'SF Pro Display';

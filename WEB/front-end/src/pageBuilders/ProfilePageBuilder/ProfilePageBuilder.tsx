@@ -7,3 +7,5 @@ const ProfilePageBuilder = () => {
 }
 
 export default ProfilePageBuilder
+
+// настройки (аватар,почта,пароль),пользовательское соглашение,поддержка,группа,сохраненные лекции

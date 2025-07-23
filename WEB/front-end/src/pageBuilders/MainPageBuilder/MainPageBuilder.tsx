@@ -1,44 +1,27 @@
 "use client"
-import React,{useState} from 'react'
+import React,{ useState,useEffect} from 'react'
 import axios from 'axios'
 import { Button } from '@/src/ui/button'
 import MainScheduleComponent from '@/src/components/MainScheduleComponent/MainScheduleComponent'
+import { tokenDecoder } from '@/src/utils/tokenDecoder/tokenDecoder'
+import useAuthenticationStore from '@/src/store/AuthenticationStore/AuthenticationStore'
 
 const MainPageBuilder = () => {
-  const getDatas = async()=>{
-    try {
-      const student = {
-        email: "test@gmail.com",
-        password: "1234PasswordTest.",
-        name: "damir",
-        surname: "satimov",
-        avatar: null,
-        is_teacher: false,
-        is_student: false,
-        is_admin: false,
-        group: null,
-        username: "dama"
-      }
-      const resp = await axios.get('https://anothergenback.onrender.com/auth/users/')
-      console.log(resp);
-      console.log(resp.data)
+  const { user } = useAuthenticationStore()
+  useEffect(()=>{
+    const token = localStorage.getItem('token')
+    if(!token){
+      console.error("Токен не найден")
     }
-    catch(error){
-      if(axios.isAxiosError(error)){
-        console.log(error);
-        
-        console.error(error.response?.data || error.message)
-      }
-      else{
-        console.error(error)
-      }
-    }
-  }
+    const userId = tokenDecoder(token)
+    console.log(userId)
+  },[user])
+  
+
   return (
     <div className='w-full h-screen flex justify-between'>
       <div>
         MainPageBuilder
-        <Button onClick={getDatas}>post</Button>
       </div>
       <MainScheduleComponent/>
     </div>

@@ -4,7 +4,7 @@ import ProfilePageBuilder from '@/src/pageBuilders/ProfilePageBuilder/ProfilePag
 const ProfilePage = () => {
   return (
     <div>
-        <ProfilePageBuilder/>
+      <ProfilePageBuilder/>
     </div>
   )
 }

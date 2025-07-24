@@ -156,7 +156,7 @@ const AuthenticationFormComponent = () => {
               className="bg-[#d3d3d3] rounded-[3px] w-[424px] h-[52px] text-[17px] mb-[47px]"
             />
           </div>
-          <Button className="rounded-[66px] w-[165px] h-[52px] bg-[#4a90e2] text-[24px]">
+          <Button className="rounded-[66px] w-[165px] h-[52px] bg-[#4a90e2] text-[24px]" onClick={onSubmit}>
             Sign in
           </Button>
         </div>

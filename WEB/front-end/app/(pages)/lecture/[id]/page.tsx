@@ -4,7 +4,7 @@ import LecturePageBuilder from '@/src/pageBuilders/LecturePageBuilder/LecturePag
 const page = () => {
   return (
     <div>
-      <LecturePageBuilder/>
+      <LecturePageBuilder params/>
     </div>
   )
 }

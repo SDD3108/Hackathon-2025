@@ -1,0 +1,23 @@
+services:
+  - type: web
+    name: django-backend
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn core.wsgi:application
+    envVars:
+      - key: SECRET_KEY
+        value: your-secret-key
+      - key: DEBUG
+        value: false
+      - key: ALLOWED_HOSTS
+        value: your-app.onrender.com
+      - key: DB_NAME
+        value: your_db_name
+      - key: DB_USER
+        value: your_db_user
+      - key: DB_PASSWORD
+        value: your_db_password
+      - key: DB_HOST
+        value: your_db_host
+      - key: DB_PORT
+        value: 5432 

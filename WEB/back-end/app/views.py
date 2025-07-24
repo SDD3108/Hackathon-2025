@@ -1,10 +1,16 @@
 # views.py
-
+import os 
 from django.shortcuts import render
 from rest_framework import viewsets, filters
 from rest_framework.parsers import MultiPartParser, FormParser
-from .models import Group, Subject, Lecture, Schedule, User
-from .serializers import GroupSerializer, SubjectSerializer, LectureSerializer, ScheduleSerializer, UserSerializer
+from rest_framework.views import APIView
+from rest_framework import status
+from rest_framework.response import Response
+from .models import Group, Subject, Lecture, Schedule, User, TimePoint
+from .serializers import GroupSerializer, SubjectSerializer, LectureSerializer, ScheduleSerializer, UserSerializer, LectureCreateSerializer
+from .vertex_ai import analyze_lecture_video, upload_to_gcs
+from decouple import config
+
 
 class GroupViewSet(viewsets.ModelViewSet):
     queryset = Group.objects.all()
@@ -17,6 +23,7 @@ class SubjectViewSet(viewsets.ModelViewSet):
 class UserView(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
+
 
 class LectureViewSet(viewsets.ModelViewSet):
     queryset = Lecture.objects.all()
@@ -64,3 +71,34 @@ class ScheduleViewSet(viewsets.ModelViewSet):
 
 
 
+class LectureCreateView(APIView):
+    def post(self, request, *args, **kwargs):
+        serializer = LectureCreateSerializer(data=request.data)
+        if serializer.is_valid():
+            lecture = serializer.save()
+
+            # Загружаем файл в GCS
+            local_path = lecture.video.path
+            filename = os.path.basename(local_path)
+            gcs_uri = upload_to_gcs(local_path, config("VERTEX_BUCKET"), f"videos/{filename}")
+
+            # Запускаем анализ
+            try:
+                analysis_result = analyze_lecture_video(gcs_uri)
+
+                lecture.title = analysis_result['title']
+                lecture.lecture_text = analysis_result['transcript']
+                lecture.save()
+
+                for point in analysis_result['timepoints']:
+                    TimePoint.objects.create(
+                        name=point.get("name", 0),
+                        time=point.get("time", ""),
+                        lecture=lecture
+                    )
+
+                return Response({'message': 'Lecture analyzed and saved'}, status=status.HTTP_201_CREATED)
+            except Exception as e:
+                return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

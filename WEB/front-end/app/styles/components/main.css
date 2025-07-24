@@ -1,35 +1,36 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap");
 @theme {
-    --breakpoint-2xs: 16rem;
-    --breakpoint-xs: 24rem;
-    --breakpoint-2sm: 32rem;
-    --color-accentColor:#0097A9;
-    --color-mainColor:#1C1C1C;
-    --color-newWhite:#d9d9d9;
-    --color-glassBg:rgba(255,255,255,0.06);
-    --shadow-custom:
-    inset 2px 2px 2px 0 #fff,0 17px 23px 0 rgba(42, 42, 42, 0.36),
+  --breakpoint-2xs: 16rem;
+  --breakpoint-xs: 24rem;
+  --breakpoint-2sm: 32rem;
+  --color-accentColor: #0097a9;
+  --color-mainColor: #1c1c1c;
+  --color-newWhite: #d9d9d9;
+  --color-glassBg: rgba(255, 255, 255, 0.06);
+  --shadow-custom: inset 2px 2px 2px 0 #fff,
+    0 17px 23px 0 rgba(42, 42, 42, 0.36),
     inset 6px 6px 26px 0 rgba(255, 255, 255, 0.4),
     inset -3px -3px 3px 0 rgba(255, 255, 255, 0.3);
-    --color-firstBlue: rgba(120, 120, 128, 0.1);
-    --color-secondBlue:#0a2139;
-    --color-thirdBlue:#0042c2;
-    --color-firstGray:#a0a0a0;
+  --color-firstBlue: rgba(120, 120, 128, 0.1);
+  --color-secondBlue: #0a2139;
+  --color-thirdBlue: #0042c2;
+  --color-firstGray: #a0a0a0;
+  --shadow-singin: 4px 0 4px 4px rgba(0, 0, 0, 0.15);
 }
 @font-face {
-    font-family: 'SF Pro Display';
-    src: url('/fonts/SFPro/SFPRODISPLAYREGULAR.OTF') format('truetype');
-    font-weight: 400;
-    font-style: normal;
+  font-family: "SF Pro Display";
+  src: url("/fonts/SFPro/SFPRODISPLAYREGULAR.OTF") format("truetype");
+  font-weight: 400;
+  font-style: normal;
 }
-  
+
 @font-face {
-    font-family: 'SF Pro Display';
-    src: url('/fonts/SFPro/SFPRODISPLAYBOLD.OTF') format('truetype');
-    font-weight: 700;
-    font-style: normal;
+  font-family: "SF Pro Display";
+  src: url("/fonts/SFPro/SFPRODISPLAYBOLD.OTF") format("truetype");
+  font-weight: 700;
+  font-style: normal;
 }
-*{
-    /* font-family: "Roboto", sans-serif; */
-    font-family: 'SF Pro Display', sans-serif;
+* {
+  /* font-family: "Roboto", sans-serif; */
+  font-family: "SF Pro Display", sans-serif;
 }

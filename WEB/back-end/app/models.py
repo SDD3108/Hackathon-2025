@@ -55,15 +55,14 @@ class Lecture(models.Model):
         return f"{self.subject.title} - {self.created_at}"
 
 
-from django.db import models
 
-class Src(models.Model):
-    num = models.IntegerField()
-    url = models.URLField()
-    lecture = models.ForeignKey('Lecture', on_delete=models.CASCADE, related_name='srcs')
+class TimePoint(models.Model):
+    name = models.CharField(max_length=255)  # Например: "Started topic"
+    time = models.CharField(max_length=10)
+    lecture = models.ForeignKey('Lecture', on_delete=models.CASCADE, related_name='timepoints')
 
     def __str__(self):
-        return f"Src {self.num} for Lecture {self.lecture.id}"
+        return f"Time point {self.name} for Lecture {self.lecture.id}"
 
 
 

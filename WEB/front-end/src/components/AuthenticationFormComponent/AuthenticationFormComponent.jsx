@@ -1,36 +1,43 @@
-"use client"
-import React, { useState } from 'react'
-import { Button } from "@/src/ui/button"
-import { Input } from "@/src/ui/input"
-import { Label } from "@/src/ui/label"
+"use client";
+import React, { useState } from "react";
+import { Button } from "@/src/ui/button";
+import { Input } from "@/src/ui/input";
+import { Label } from "@/src/ui/label";
 // import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/src/ui/card"
 // import { Eye, EyeOff } from 'lucide-react'
-import useAuthenticationStore from '@/src/store/AuthenticationStore/AuthenticationStore'
-import { useForm } from 'react-hook-form'
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/src/ui/form'
-import { useRouter } from 'next/navigation'
+import useAuthenticationStore from "@/src/store/AuthenticationStore/AuthenticationStore";
+import { useForm } from "react-hook-form";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/src/ui/form";
+import { useRouter } from "next/navigation";
 
-const AuthenticationFormComponent = ()=>{
-  const router = useRouter()
-  const { loading, error, signIn } = useAuthenticationStore()
- 
+const AuthenticationFormComponent = () => {
+  const router = useRouter();
+  const { loading, error, signIn } = useAuthenticationStore();
+
   const form = useForm({
     defaultValues: {
-      email: '',
-      password: ''
-    }
-  })
-  const onSubmit = async(data)=>{
+      email: "",
+      password: "",
+    },
+  });
+  const onSubmit = async (data) => {
     const success = await signIn({
       email: data.email,
-      password: data.password
-    })
-    if(success){
-      router.push('/')
-      // заменить на toast 
-      console.log("Login successful!")
+      password: data.password,
+    });
+    if (success) {
+      router.push("/");
+      // заменить на toast
+      console.log("Login successful!");
     }
-  }
+  };
 
   return (
     // <div className="min-h-screen bg-[url('/SignIn/blurry-gradient-haikei-1.svg')] bg-no-repeat flex justify-center items-center">
@@ -41,7 +48,7 @@ const AuthenticationFormComponent = ()=>{
     //         The truth comes in discussions
     //       </CardDescription>
     //     </CardHeader>
-        
+
     //     <CardContent className='sticky z-2'>
     //       <Form {...form}>
     //         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-[2rem]">
@@ -67,7 +74,7 @@ const AuthenticationFormComponent = ()=>{
     //                 </FormItem>
     //             )}/>
     //             <FormField control={form.control} name="password"
-    //               rules={{ 
+    //               rules={{
     //                 required:"Password is required",
     //                 minLength:{
     //                   value:6,
@@ -83,7 +90,7 @@ const AuthenticationFormComponent = ()=>{
     //                       </div>
     //                       <FormControl>
     //                         <Input {...field} id="login-password" type='text' className="rounded-b-3xl text-3xl !text-firstGray relative !rounded-l-none !rounded-t-none border-none bg-firstBlue focus-visible:!ring-0 focus-visible:!border-none focus-visible:!ring-transparent" placeholder="••••••••" disabled={loading}/>
-    //                       </FormControl> 
+    //                       </FormControl>
     //                     </div>
     //                   </div>
     //                   <FormMessage className="text-red-400 mt-1" />
@@ -105,10 +112,57 @@ const AuthenticationFormComponent = ()=>{
     //     <div className='absolute top-0 left-0 z-1 bg-glassBg w-full h-full shadow-custom rounded-4xl'></div>
     //   </Card>
     // </div>
-    <div>
-
+    <div className="w-screen h-screen bg-[#8FBFFA] ">
+      <div className="w-2xl h-screen flex flex-col justify-center items-center bg-[#FFFFFF] shadow-singin">
+        <div className="flex flex-col">
+          <div className="absolute top-4 left-2 flex font-[400] text-[20px] text-[#4e90e2]">
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M17.77 3.77L16 2L6 12L16 22L17.77 20.23L9.54 12L17.77 3.77Z"
+                fill="#4A90E2"
+              />
+            </svg>
+            <Label>back</Label>
+          </div>
+          <h1 className="text-[86px] text-[#333333] font-[590] mb-[35px]">
+            Sign in
+          </h1>
+          <Label className="text-[#666666] text-[30px] font-[500] mb-[61px]">
+            join the virtual group{" "}
+          </Label>
+          <div>
+            <Label className="text-[24px] text-[#666666] font-[400] mb-[25px]">
+              Please write your email
+            </Label>
+            <Input
+              type="email"
+              placeholder="value"
+              className="bg-[#d3d3d3] rounded-[3px] w-[424px] h-[52px] text-[17px] mb-[46px]"
+            />
+          </div>
+          <div>
+            <Label className="text-[24px] text-[#666666] font-[400] mb-[25px]">
+              Please write your password
+            </Label>
+            <Input
+              type="password"
+              placeholder="value"
+              className="bg-[#d3d3d3] rounded-[3px] w-[424px] h-[52px] text-[17px] mb-[47px]"
+            />
+          </div>
+          <Button className="rounded-[66px] w-[165px] h-[52px] bg-[#4a90e2] text-[24px]">
+            Sign in
+          </Button>
+        </div>
+      </div>
     </div>
-  )
-}
+  );
+};
 
-export default AuthenticationFormComponent
+export default AuthenticationFormComponent;

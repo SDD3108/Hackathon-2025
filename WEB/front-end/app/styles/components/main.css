@@ -3,8 +3,9 @@
   --breakpoint-2xs: 16rem;
   --breakpoint-xs: 24rem;
   --breakpoint-2sm: 32rem;
-  --color-accentColor: #0097a9;
+  --color-accentColor: #4a90e2;
   --color-mainColor: #1c1c1c;
+  --color-bgColor:#2363b2;
   --color-newWhite: #d9d9d9;
   --color-glassBg: rgba(255, 255, 255, 0.06);
   --shadow-custom: inset 2px 2px 2px 0 #fff,
@@ -15,6 +16,7 @@
   --color-secondBlue: #0a2139;
   --color-thirdBlue: #0042c2;
   --color-firstGray: #a0a0a0;
+  --color-secondGray:#d3d3d3;
   --shadow-singin: 4px 0 4px 4px rgba(0, 0, 0, 0.15);
 }
 @font-face {

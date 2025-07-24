@@ -23,6 +23,6 @@
       "@/*": ["./*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/components/AuthenticationFormComponent/AuthenticationFormComponent.jsx", "src/pageBuilders/SettingsPageBuilder/SettingsPageBuilder.jsx", "app/(authentication)/signapp/authentication/signin/page.jsxsignin/page.jsx", "app/(pages)/settings/page.jsx", "src/store/AuthenticationStore/AuthenticationStore.js", "src/components/SettingsComponent/SettingsComponent.jsx"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/components/AuthenticationFormComponent/AuthenticationFormComponent.jsx", "src/pageBuilders/SettingsPageBuilder/SettingsPageBuilder.jsx", "app/(authentication)/signapp/authentication/signin/page.jsxsignin/page.jsx", "app/(pages)/settings/page.jsx", "src/store/AuthenticationStore/AuthenticationStore.js", "src/components/SettingsComponent/SettingsComponent.jsx", "src/pageBuilders/LecturePageBuilder/LecturePageBuilder.jsx", "src/pageBuilders/MainPageBuilder/MainPageBuilder.ksx"],
   "exclude": ["node_modules"]
 }

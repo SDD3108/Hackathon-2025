@@ -14,7 +14,7 @@ from pathlib import Path
 import os
 from decouple import config
 import dj_database_url
-
+from google.oauth2 import service_account
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -63,6 +63,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'djoser',
     'app',
+    'storages'
 ]
 
 MIDDLEWARE = [
@@ -111,7 +112,17 @@ DATABASES = {
     }
 }
 
+VERTEX_PROJECT = config('VERTEX_PROJECT')
+VERTEX_LOCATION = config('VERTEX_LOCATION')
+VERTEX_BUCKET = config('VERTEX_BUCKET')
+VERTEX_SERVICE_ACCOUNT_FILE = os.path.join(BASE_DIR, config('VERTEX_SERVICE_ACCOUNT_FILE'))
 
+
+DEFAULT_FILE_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage'
+GS_BUCKET_NAME = config('VERTEX_BUCKET')  # lecture-videos-bucket
+GS_CREDENTIALS = service_account.Credentials.from_service_account_file(
+    os.path.join(BASE_DIR, config('VERTEX_SERVICE_ACCOUNT_FILE'))
+)
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators

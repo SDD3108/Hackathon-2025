@@ -1,25 +1,19 @@
 "use client";
-import React, { useState } from "react";
-import { Button } from "@/src/ui/button";
-import { Input } from "@/src/ui/input";
-import { Label } from "@/src/ui/label";
+import React, { useState } from "react"
+import { Button } from "@/src/ui/button"
+import { Input } from "@/src/ui/input"
+import { Label } from "@/src/ui/label"
 // import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/src/ui/card"
 // import { Eye, EyeOff } from 'lucide-react'
-import useAuthenticationStore from "@/src/store/AuthenticationStore/AuthenticationStore";
-import { useForm } from "react-hook-form";
-import {Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/src/ui/form";
-import { useRouter } from "next/navigation";
+import useAuthenticationStore from "@/src/store/AuthenticationStore/AuthenticationStore"
+import { useForm } from "react-hook-form"
+import {Form,FormControl,FormField,FormItem,FormLabel,FormMessage} from "@/src/ui/form"
+import { useRouter } from "next/navigation"
 
 const AuthenticationFormComponent = () => {
   const router = useRouter()
   const { loading, error, signIn } = useAuthenticationStore()
-
+  console.log(error);
   const form = useForm({
     defaultValues: {
       email: "",

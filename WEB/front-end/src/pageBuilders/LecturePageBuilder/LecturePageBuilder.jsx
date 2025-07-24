@@ -34,13 +34,14 @@ const LecturePageBuilder = ({ params }) => {
   const router = useRouter()
   
   const highlightColors = [
-    'bg-yellow-400 bg-opacity-40',
-    'bg-green-400 bg-opacity-40',
-    'bg-blue-400 bg-opacity-40',
-    'bg-pink-400 bg-opacity-40',
-    'bg-purple-400 bg-opacity-40',
-    'bg-red-400 bg-opacity-40',
-    'bg-indigo-400 bg-opacity-40',
+    // opacity - 0.43, бордер цветом выделения
+    'bg-yellow-400 bg-opacity-10',
+    'bg-green-400 bg-opacity-10',
+    'bg-blue-400 bg-opacity-10',
+    'bg-pink-400 bg-opacity-10',
+    'bg-purple-400 bg-opacity-10',
+    'bg-red-400 bg-opacity-10',
+    'bg-indigo-400 bg-opacity-10',
   ]
 
   useEffect(() => {
@@ -57,22 +58,19 @@ const LecturePageBuilder = ({ params }) => {
           video: "https://www.w3schools.com/html/mov_bbb.mp4",
           date: "01.07.2025",
           teacherId: "4",
-        }
-        
+        }      
         const mockSubject = {
           id: "2",
           title: "Высшая математика",
           classroom: "А-305",
           lectureId: mockLecture.id,
           typeOfSubject: "2",
-        }
-        
+        }    
         const mockGroup = {
           id: "3",
           title: "МАТ-202",
           curatorId: "4",
-        }
-        
+        }     
         const mockTeacher = {
           id: '4',
           name: "Мария",
@@ -84,8 +82,7 @@ const LecturePageBuilder = ({ params }) => {
           is_teacher: true,
           is_admin: false,
           classId: '3',
-        }
-        
+        }    
         const mockKeywords = {
           id: "5",
           main: ["Lorem", "Nullam", "lectus", "diam", "fringilla"],

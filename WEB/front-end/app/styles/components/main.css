@@ -17,6 +17,7 @@
   --color-firstGray: #a0a0a0;
   --shadow-singin: 4px 0 4px 4px rgba(0, 0, 0, 0.15);
 }
+/* сделать тут не SF PRO DISPLAY а просто SFPRO */
 @font-face {
   font-family: "SF Pro Display";
   src: url("/fonts/SFPro/SFPRODISPLAYREGULAR.OTF") format("truetype");

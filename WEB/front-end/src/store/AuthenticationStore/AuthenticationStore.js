@@ -27,6 +27,8 @@ const useAuthenticationStore = create((set)=>({
   },
   signIn:async(userData)=>{
     set({loading:true, error:null})
+    // console.log(USERS_API);
+    // console.log(USER_LOGIN);
     try {
       const response = await axios.post(USER_LOGIN,userData,
         {
@@ -39,7 +41,8 @@ const useAuthenticationStore = create((set)=>({
       return true
     }
     catch(error){
-      set({error:'Login failed',loading:false})
+      const message = error.response?.data?.detail || error.response?.data?.message || error.message || 'Login failed'
+      set({error:message,loading:false})
       return false
     }
   },

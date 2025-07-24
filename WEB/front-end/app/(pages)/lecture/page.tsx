@@ -5,7 +5,7 @@ const page = () => {
     <div>
       <LecturesPageBuilder/>
     </div>
-  )r
+  )
 }
 
 export default page

@@ -13,13 +13,13 @@ router.register(r'subjects', SubjectViewSet, basename='subject')
 router.register(r'lectures', LectureViewSet, basename='lecture')
 router.register(r'schedules', ScheduleViewSet, basename='schedule')
 router.register(r'users', UserView, basename='user')
-router.register(r'lecture-create', LectureCreateView.as_view(), basename='lecture-create')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('auth/', include('djoser.urls')),
     path('auth/', include('djoser.urls.jwt')),
     path('api/', include(router.urls)),
+    path('api/lectures/create/', LectureCreateView.as_view(), name='lecture-create'),
 ]
 
 if settings.DEBUG:

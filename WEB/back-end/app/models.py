@@ -57,8 +57,8 @@ class Lecture(models.Model):
 
 
 class TimePoint(models.Model):
-    name = models.IntegerField()
-    time = models.URLField()
+    name = models.CharField(max_length=255)  # Например: "Started topic"
+    time = models.CharField(max_length=10)
     lecture = models.ForeignKey('Lecture', on_delete=models.CASCADE, related_name='timepoints')
 
     def __str__(self):

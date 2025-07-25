@@ -4,7 +4,7 @@ import React, { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import { Button } from '@/src/ui/button'
 import { motion } from 'framer-motion'
-import { Avatar, AvatarImage, AvatarFallback } from '@/src/ui/avatar'
+// import { Avatar, AvatarImage, AvatarFallback } from '@/src/ui/avatar'
 import { Separator } from '@/src/ui/separator'
 import { Skeleton } from '@/src/ui/skeleton'
 import {
@@ -16,10 +16,14 @@ import {
 import { BookText,Users,User,DoorOpen } from 'lucide-react'
 // import { ContextMenu,ContextMenuContent,ContextMenuItem,ContextMenuTrigger } from '@/src/ui/context-menu'
 import useAuthenticationStore from '@/src/store/AuthenticationStore/AuthenticationStore'
+// import { GetDatasApi } from '@/src/utils/GetDatasApi/GetDatasApi'
+import { tokenDecoder } from '@/src/utils/tokenDecoder/tokenDecoder'
 import { GetDatasApi } from '@/src/utils/GetDatasApi/GetDatasApi'
 
+// 4 lectures
 const LecturePageBuilder = ({ params }) => {
-  const { user: currentUser } = useAuthenticationStore()
+  const { user } = useAuthenticationStore()
+  const [currentUser,setCurrentUser] = useState()
   const [lecture, setLecture] = useState(null)
   const [subject, setSubject] = useState(null)
   const [group, setGroup] = useState(null)
@@ -31,14 +35,20 @@ const LecturePageBuilder = ({ params }) => {
   const contentRef = useRef(null)
   const router = useRouter()
 
-  const test =async()=>{
-    const api = proccess.env.NEXT_PUBLIC_USERS_API
-    const resp = await GetDatasApi(api)
-    console.log(resp);
-    
+  const getCurrentUser = async()=>{
+    if(user == ''){
+      const token = localStorage.getItem('token')
+      const userId = tokenDecoder(token)
+      const USERS_API = process.env.NEXT_PUBLIC_USERS_API
+      const currentUser = await GetDatasApi(`${USERS_API}${userId}`)
+      setCurrentUser(currentUser)
+    }
+    const userId = tokenDecoder(user)
+    const USERS_API = process.env.NEXT_PUBLIC_USERS_API
+    const currentUser = await GetDatasApi(`${USERS_API}${userId}`)
+    setCurrentUser(currentUser)
   }
-  test()
-
+  getCurrentUser()
   const highlightColors = [
     // opacity - 0.43, бордер цветом выделения
     'bg-yellow-400 bg-opacity-10',
@@ -116,7 +126,7 @@ const LecturePageBuilder = ({ params }) => {
 
   // Обработка выделения текста
   const handleTextSelect = ()=>{
-    if(currentUser?.is_student || !contentRef.current){
+    if(!currentUser?.is_student || !contentRef.current){
       return
     }
     
@@ -299,15 +309,6 @@ const LecturePageBuilder = ({ params }) => {
                 <div className='border-b-white border-b w-full h-auto mb-1 2xs:hidden xs:block'></div>
                 <span className='whitespace-nowrap'>{teacher.name} {teacher.surname}</span>
               </div>
-              {/* <Avatar className="max-xs:hidden 2sm:block">
-                {teacher.avatar ? (
-                  <AvatarImage src={teacher.avatar} alt={`${teacher.name} ${teacher.surname}`} />
-                ) : (
-                  <AvatarFallback className='bg-mainColor border-2 text-sm items-center'>
-                    {getInitials(teacher.name, teacher.surname)}
-                  </AvatarFallback>
-                )}
-              </Avatar> */}
             </p>
             <p className="w-full text-lg flex items-center space-x-3">
               <DoorOpen size={32} color="#ffffff" strokeWidth={1} absoluteStrokeWidth />

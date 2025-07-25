@@ -22,11 +22,11 @@ const ProfilePageBuilder = () => {
   const [currentUser, setCurrentUser] = useState(null)
   const [groupMembers, setGroupMembers] = useState([])
   const [favoriteLectures, setFavoriteLectures] = useState([])
-  const {user: authUser} = useAuthenticationStore()
+  const { user } = useAuthenticationStore()
+  // const [currentUser,setCurrentUser] = useState({id:'1',name:'Damir',surname:"satimov",})
 
   const resp = axios.get(process.env.NEXT_PUBLIC_USERS_API)
   console.log(resp);
-  
   useEffect(() => {
     const loadUserData = async() => {
       setIsLoading(true)
@@ -54,8 +54,10 @@ const ProfilePageBuilder = () => {
     loadUserData()
   }, [])
 
-  const handleSaveChanges = async() => {
-    if(!currentUser) return
+  const handleSaveChanges = async()=>{
+    if(!currentUser){
+      return
+    }
     try{
       setIsLoading(true)
       const updatedUser = {
@@ -68,7 +70,7 @@ const ProfilePageBuilder = () => {
       const api = process.env.NEXT_PUBLIC_USERS_API
       await axios.put(`${api}${currentUser.id}`, updatedUser)
       setCurrentUser(updatedUser)
-      if(authUser && authUser.id === currentUser.id){
+      if(authUser && authUser.id == currentUser.id){
         useAuthenticationStore.getState().setUser(updatedUser)
       }
       alert("Profile updated successfully!")

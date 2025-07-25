@@ -5,6 +5,8 @@ import { Button } from '@/src/ui/button'
 import { motion } from 'framer-motion'
 import { Skeleton } from '@/src/ui/skeleton'
 import useAuthenticationStore from '@/src/store/AuthenticationStore/AuthenticationStore'
+import { User } from 'lucide-react'
+import { Label } from '@/src/ui/label'
 
 const MainPageBuilder = () => {
   const { user } = useAuthenticationStore()
@@ -125,7 +127,7 @@ const MainPageBuilder = () => {
     </div>
   )
   // if not authenticated
-  if(isAuthenticated() && !loading){
+  if(!isAuthenticated() && !loading){
     return (
       <div className="w-full min-h-screen bg-white">
       
@@ -135,8 +137,14 @@ const MainPageBuilder = () => {
 
   return (
     <div className="w-full min-h-screen flex flex-col bg-mainBlue">
-      <header className="flex justify-end min-h-16 text-white p-8 border-b">
-        <div className='w-25 h-25 bg-newWhite rounded-full cursor-pointer'></div>
+      <header className="flex justify-between min-h-16 text-white p-8 border-b bg-white shadow-xl">
+        <div className='flex space-x-3'>
+          <div></div>
+          <Label className='text-mainBlue text-3xl font-semibold flex gap-0'>Lec<span className='text-black'>Sure</span></Label>
+        </div>        
+        <div className='w-16 h-16 bg-newWhite rounded-full cursor-pointer flex justify-center items-center' onClick={()=>router.push('/profile')}>
+          <User width={40} color='#000000' className='h-[2.5rem]' strokeWidth='1' />
+        </div>
       </header>
 
       <div className="flex-1 flex justify-center items-start pt-18 px-4">
@@ -167,7 +175,7 @@ const MainPageBuilder = () => {
                       {/* {lesson.startTime} - {calculateEndTime(lesson.startTime, duration)} */}
                     </div>
                     
-                    {daysOfWeek.map((day, dayIndex) => {
+                    {daysOfWeek.map((day, dayIndex)=>{
                       const lesson = findLesson(day, timeSlot);
                       if (lesson && timeIndex > 0) {
                         const prevTimeSlot = timeSlots[timeIndex - 1];

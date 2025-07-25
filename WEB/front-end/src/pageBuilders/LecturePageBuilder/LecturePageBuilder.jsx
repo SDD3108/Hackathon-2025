@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 "use client"
 import React, { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
@@ -12,13 +13,10 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/src/ui/tooltip'
-import {
-  ContextMenu,
-  ContextMenuContent,
-  ContextMenuItem,
-  ContextMenuTrigger,
-} from '@/src/ui/context-menu'
+import { BookText,Users,User,DoorOpen } from 'lucide-react'
+// import { ContextMenu,ContextMenuContent,ContextMenuItem,ContextMenuTrigger } from '@/src/ui/context-menu'
 import useAuthenticationStore from '@/src/store/AuthenticationStore/AuthenticationStore'
+import { GetDatasApi } from '@/src/utils/GetDatasApi/GetDatasApi'
 
 const LecturePageBuilder = ({ params }) => {
   const { user: currentUser } = useAuthenticationStore()
@@ -32,7 +30,15 @@ const LecturePageBuilder = ({ params }) => {
   const [selection, setSelection] = useState(null)
   const contentRef = useRef(null)
   const router = useRouter()
-  
+
+  const test =async()=>{
+    const api = proccess.env.NEXT_PUBLIC_USERS_API
+    const resp = await GetDatasApi(api)
+    console.log(resp);
+    
+  }
+  test()
+
   const highlightColors = [
     // opacity - 0.43, бордер цветом выделения
     'bg-yellow-400 bg-opacity-10',
@@ -44,7 +50,7 @@ const LecturePageBuilder = ({ params }) => {
     'bg-indigo-400 bg-opacity-10',
   ]
 
-  useEffect(() => {
+  useEffect(()=>{
     const fetchData = async () => {
       try {
         // Имитация загрузки данных
@@ -55,7 +61,7 @@ const LecturePageBuilder = ({ params }) => {
           title: "Дифференциальные уравнения",
           keywordsId: '5',
           content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam luctus odio diam, nec vestibulum nunc fringilla commodo. Nam vitae mi luctus, rhoncus turpis vitae, bibendum est. Cras cursus scelerisque quam, mattis tincidunt elit ullamcorper vitae. Donec facilisis, diam sit amet consequat fringilla, lectus orci rhoncus leo, sit amet pellentesque orci dolor non nisl. Phasellus non felis metus. Nulla molestie diam erat, a pharetra neque venenatis eu. Etiam est libero, dapibus in urna vitae, porttitor elementum arcu. Sed nec nisl ac est dignissim laoreet. Duis blandit tortor vel dui fringilla, in faucibus leo auctor. Donec neque leo, interdum sed odio sit amet, blandit faucibus ex. Proin aliquet viverra lacus non elementum. Donec placerat vel neque in accumsan. Donec pretium pharetra dictum. Nunc vel lacus quis libero gravida vulputate. Sed pellentesque eget odio vel hendrerit. Suspendisse in est lacus. Aenean feugiat erat porttitor augue placerat posuere eget pretium tellus. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Suspendisse in orci vel felis vestibulum ultricies quis sollicitudin nisi. Morbi tristique tortor at felis vestibulum, non tristique lorem lacinia. In hac habitasse platea dictumst. In ut neque orci. Nullam ligula ligula, fermentum ac elit eu, aliquet ultrices ipsum. Mauris eget felis ut sapien cursus dapibus ac vestibulum est. Fusce feugiat, mi vitae tempus dapibus, justo metus molestie erat, id posuere magna turpis ac ex. Morbi fringilla lacus ante, sit amet suscipit arcu mattis vel.Duis tincidunt dignissim turpis, sit amet dignissim odio ultricies nec. Aenean tortor velit, accumsan non metus eget, rhoncus consequat urna. Etiam sed hendrerit lorem. Nunc feugiat sem velit, at eleifend risus pretium sit amet. Nullam tempus convallis neque, id ultricies sapien aliquet vitae. Nulla viverra leo eu dolor tempor dapibus. Curabitur at justo quis magna elementum posuere et id est. Aenean id eleifend justo. Morbi ut hendrerit sapien. Nulla nec libero at nisl porttitor accumsan. Curabitur ornare non lacus eget venenatis. Sed a pellentesque massa. Pellentesque iaculis enim quis nulla viverra, id dignissim massa condimentum. Cras suscipit mollis faucibus. Curabitur vestibulum rutrum justo non commodo. Maecenas ex felis, cursus id dignissim varius, lacinia non urna. Aliquam purus ligula, feugiat dapibus neque at, bibendum lacinia arcu. Donec rutrum dapibus porta. Sed augue nisl, euismod vel erat eget, semper convallis erat. Maecenas dictum risus quis elit dignissim, in hendrerit tellus sollicitudin. Donec molestie ligula id lobortis luctus. Sed non lorem aliquet, dignissim dui sed, bibendum sem. Integer eu rutrum augue. Sed nec congue elit. Suspendisse efficitur lacus leo, vel lacinia erat feugiat hendrerit. Praesent sit amet elit ex. Nunc eu sollicitudin turpis, quis accumsan lacus. In elementum lorem nec mauris dapibus tristique. Suspendisse auctor dolor in placerat imperdiet. Interdum et malesuada fames ac ante ipsum primis in faucibus. Phasellus iaculis urna id purus euismod pulvinar. Curabitur fermentum, velit eget auctor volutpat, est mauris semper mauris, ut fringilla dolor ante quis nisl. Fusce at diam in dui euismod luctus. Duis et sagittis odio, vitae faucibus ipsum. Nam nulla ex, venenatis at enim tempor, maximus accumsan urna. Aenean et magna faucibus, gravida enim vel, tristique sapien.",
-          video: "https://www.w3schools.com/html/mov_bbb.mp4",
+          video: "https://storage.cloud.google.com/lecture-videos-bucket/videos/The_Witcher_3_2023-10-29_23-51-13.mp4",
           date: "01.07.2025",
           teacherId: "4",
         }      
@@ -93,27 +99,29 @@ const LecturePageBuilder = ({ params }) => {
         setGroup(mockGroup)
         setTeacher(mockTeacher)
         setKeywords(mockKeywords)
-      } catch(error) {
-        console.error('Ошибка загрузки данных:', error)
-      } finally {
+      }
+      catch(error){
+        console.error('Ошибка загрузки данных',error)
+      }
+      finally{
         setLoading(false)
       }
     }
 
     fetchData()
-  }, [params.id])
-
-  // Генерация инициалов для аватара
-  const getInitials = (name, surname) => {
+  },[params.id])
+  const getInitials = (name,surname)=>{
     return `${name ? name[0] : ''}${surname ? surname[0] : ''}`
   }
 
   // Обработка выделения текста
-  const handleTextSelect = () => {
-    if (currentUser?.is_student || !contentRef.current) return
+  const handleTextSelect = ()=>{
+    if(currentUser?.is_student || !contentRef.current){
+      return
+    }
     
     const selection = window.getSelection()
-    if (!selection.toString().trim()) {
+    if(!selection.toString().trim()){
       setIsSelecting(false)
       return
     }
@@ -130,9 +138,8 @@ const LecturePageBuilder = ({ params }) => {
     })
     setIsSelecting(true)
   }
-
   // Добавление ключевого слова
-  const handleAddKeyword = () => {
+  const handleAddKeyword = ()=>{
     if (!selection || !selection.text) return
     
     // Проверяем, не добавлено ли уже это слово
@@ -148,16 +155,14 @@ const LecturePageBuilder = ({ params }) => {
     setSelection(null)
     window.getSelection().removeAllRanges()
   }
-
   // Удаление ключевого слова
-  const handleRemoveKeyword = (word) => {
+  const handleRemoveKeyword = (word)=>{
     const newKeywords = keywords.main.filter(w => w !== word)
     setKeywords({ ...keywords, main: newKeywords })
     
     // Здесь должен быть вызов API для удаления
     console.log(`Удалено ключевое слово: ${word}`)
   }
-
   // Функция для выделения ключевых слов
   const highlightKeywords = (text,keywords)=>{
     if(!keywords || keywords.length == 0){
@@ -191,7 +196,6 @@ const LecturePageBuilder = ({ params }) => {
     
     return result
   }
-
   // Обработка наведения на выделенное слово
   useEffect(()=>{
     if(currentUser?.is_student || !contentRef.current){
@@ -221,14 +225,11 @@ const LecturePageBuilder = ({ params }) => {
       contentElement.removeEventListener('click', handleClick)
     }
   },[keywords, currentUser])
+  const skeletonsText = [{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}]
   // skeletons
   if(loading){
     return (
-      <div className="w-full min-h-screen flex flex-col">
-        <header className="h-16 bg-gray-800 p-4">
-          <Skeleton className="h-full w-full" />
-        </header>
-        
+      <div className="w-full min-h-screen flex flex-col bg-mainColor">
         <div className="flex-1 container mx-auto px-4 py-8 max-w-6xl">
           <div className="mb-8 space-y-4">
             <Skeleton className="h-6 w-1/4" />
@@ -248,8 +249,8 @@ const LecturePageBuilder = ({ params }) => {
             <Skeleton className="w-full max-w-[60rem] h-[24rem]" />
           </div>
           <div className="space-y-3">
-            {[...Array(15)].map((_, i) => (
-              <Skeleton key={i} className="h-4 w-full" />
+            {skeletonsText.map((text,index)=>(
+              <Skeleton key={index} className="h-4 w-full" />
             ))}
           </div>
         </div>
@@ -271,59 +272,70 @@ const LecturePageBuilder = ({ params }) => {
   )
 
   return (
-    <div className="w-full min-h-screen flex flex-col">
-
-      <header className="h-16 bg-gray-800 text-white p-4">
-        {/* Шапка сайта */}
-      </header>
-
+    <div className="w-full min-h-screen flex flex-col bg-mainColor">
       <div className="flex-1 container mx-auto px-4 py-8 max-w-6xl">
-
-        <motion.div initial={{opacity: 0,y: -20}} animate={{opacity:1, y:0}}className="mb-8">
-          <div className="space-y-2">
-            <p className="text-lg">
-              <span className="font-semibold">Предмет:</span> {subject.title}
+        <motion.div initial={{opacity: 0,y: -20}} animate={{opacity:1, y:0}}className="mb-8 px-6">
+          <div className="space-y-2 text-white md:max-w-1/2 xs:max-w-full">
+            <p className="w-full text-lg flex items-center space-x-3">
+              <BookText size={32} color="#ffffff" strokeWidth={1} absoluteStrokeWidth />
+              <div className='flex flex-row justify-between w-full xs:flex-row 2xs:flex-col'>
+                <span>Предмет</span>
+                <div className='border-b-white border-b w-full h-auto mb-1 2xs:hidden xs:block'></div>
+                <span className='whitespace-nowrap'>{subject.title}</span>
+              </div>
             </p>
-            <p className="text-lg">
-              <span className="font-semibold">Группа:</span> {group.title}
+            <p className="w-full text-lg flex items-center space-x-3">
+              <Users size={32} color="#ffffff" strokeWidth={1} absoluteStrokeWidth />
+              <div className='flex justify-between w-full xs:flex-row 2xs:flex-col'>
+                <span>Группа</span>
+                <div className='border-b-white border-b w-full h-auto mb-1 2xs:hidden xs:block'></div>
+                <span className='whitespace-nowrap'>{group.title}</span>
+              </div>
             </p>
-            <p className="text-lg flex items-center">
-              <span className="font-semibold mr-2">Преподаватель:</span> 
-              <Avatar className="mr-2">
+            <p className="w-full text-lg flex items-center space-x-3">
+              <User size={32} color="#ffffff" strokeWidth={1} absoluteStrokeWidth />
+              <div className='flex justify-between w-full xs:flex-row 2xs:flex-col'>
+                <span>Преподаватель</span>
+                <div className='border-b-white border-b w-full h-auto mb-1 2xs:hidden xs:block'></div>
+                <span className='whitespace-nowrap'>{teacher.name} {teacher.surname}</span>
+              </div>
+              {/* <Avatar className="max-xs:hidden 2sm:block">
                 {teacher.avatar ? (
                   <AvatarImage src={teacher.avatar} alt={`${teacher.name} ${teacher.surname}`} />
                 ) : (
-                  <AvatarFallback>
+                  <AvatarFallback className='bg-mainColor border-2 text-sm items-center'>
                     {getInitials(teacher.name, teacher.surname)}
                   </AvatarFallback>
                 )}
-              </Avatar>
-              {teacher.name} {teacher.surname}
+              </Avatar> */}
             </p>
-            <p className="text-lg">
-              <span className="font-semibold">Кабинет:</span> {subject.classroom}
+            <p className="w-full text-lg flex items-center space-x-3">
+              <DoorOpen size={32} color="#ffffff" strokeWidth={1} absoluteStrokeWidth />
+              <div className='flex justify-between w-full xs:flex-row 2xs:flex-col'>
+                <span>Кабинет</span>
+                <div className='border-b-white border-b w-full h-auto mb-1 2xs:hidden xs:block'></div>
+                <span className='whitespace-nowrap'>{subject.classroom}</span>
+              </div>
             </p>
           </div>
         </motion.div>
         <Separator className="my-8" />
-        <motion.div initial={{opacity: 0}} animate={{opacity: 1}} transition={{delay: 0.2}} className="text-center mb-12">
-          <h1 className="text-6xl font-semibold mb-6">{lecture.title}</h1>
-          <p className="text-2xl font-semibold text-gray-600">{lecture.date}</p>
+        <motion.div initial={{opacity: 0}} animate={{opacity: 1}} transition={{delay: 0.2}} className="text-center mb-4 flex flex-col space-y-6">
+          <h1 className="lg:text-6xl md:text-5xl 2sm:text-3xl 2xs:text-2xl font-semibold text-white">{lecture.title}</h1>
+          <p className="text-2xl font-semibold text-fourthGray">{lecture.date}</p>
         </motion.div>
-
-        <motion.div initial={{opacity:0, scale:0.95}} animate={{opacity:1, scale:1}} transition={{delay: 0.4}} className="flex justify-center mb-12">
-          <div className="w-full max-w-[60rem] h-[24rem] bg-black rounded-xl overflow-hidden">
+        <motion.div initial={{opacity:0, scale:0.95}} animate={{opacity:1, scale:1}} transition={{delay: 0.4}} className="flex justify-center mb-6">
+          <div className="w-full max-w-[60rem] h-[24rem] bg-black overflow-hidden">
             <video src={lecture.video} controls className="w-full h-full object-contain"/>
           </div>
         </motion.div>
-
-        <motion.div initial={{opacity: 0}} animate={{opacity: 1}} transition={{delay: 0.6}} className="prose prose-lg max-w-none relative" ref={contentRef} onMouseUp={handleTextSelect}>
+        <motion.div initial={{opacity: 0}} animate={{opacity: 1}} transition={{delay: 0.6}} className="prose prose-lg max-w-none relative text-white text-2xl px-6" ref={contentRef} onMouseUp={handleTextSelect}>
           {isSelecting && !currentUser?.is_student && selection && (
             <motion.div initial={{opacity: 0, y: 10}} animate={{ opacity: 1, y: 0 }} className="absolute z-10" style={{ top: `${selection.top - 40}px`, left: `${selection.left}px` }}>
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <Button variant="default" className="bg-blue-600 hover:bg-blue-700 text-white shadow-lg" onClick={handleAddKeyword}>
+                    <Button variant="default" className="bg-white hover:bg-newWhite text-black shadow-lg" onClick={handleAddKeyword}>
                       Добавить "{selection.text}"
                     </Button>
                   </TooltipTrigger>

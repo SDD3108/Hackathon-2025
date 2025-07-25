@@ -1,13 +1,13 @@
 "use client"
-import React, { useState, useEffect } from 'react'
-import useAuthenticationStore from '@/src/store/AuthenticationStore/AuthenticationStore'
+import React, { useEffect } from 'react'
+// import useAuthenticationStore from '@/src/store/AuthenticationStore/AuthenticationStore'
 
 const Header = () => {
-  const [isScrolled, setIsScrolled] = useState(false)
+  // const [isScrolled, setIsScrolled] = useState(false)
 
   useEffect(()=>{
     const handleScroll = ()=>{
-      setIsScrolled(window.scrollY > 10)
+      // setIsScrolled(window.scrollY > 10)
     }
     window.addEventListener('scroll',handleScroll)
     return () => window.removeEventListener('scroll',handleScroll)

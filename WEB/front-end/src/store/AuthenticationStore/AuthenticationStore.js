@@ -4,9 +4,10 @@ const USERS_API = process.env.NEXT_PUBLIC_USERS_API
 const USER_LOGIN = process.env.NEXT_PUBLIC_USER_LOGIN
 
 const useAuthenticationStore = create((set)=>({
-  user: '',
+  token: '',
   loading: false,
   error: null,
+  user: null,
 
   signUp: async(userData)=>{
     set({loading:true, error:null})
@@ -48,7 +49,10 @@ const useAuthenticationStore = create((set)=>({
   },
   signOut:()=>{
     set({user:null})
-  }
+  },
+  setUser:()=>{
+    
+  },
 }))
 
 export default useAuthenticationStore

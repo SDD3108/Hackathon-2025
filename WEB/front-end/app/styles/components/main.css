@@ -18,6 +18,18 @@
   --color-firstGray: #a0a0a0;
   --color-secondGray:#d3d3d3;
   --shadow-singin: 4px 0 4px 4px rgba(0, 0, 0, 0.15);
+  --color-bgPrimary:#8FBFFA;
+  --color-bgSecondary:#E0E0E0;
+  --color-placeholder:#D3D3D3;
+  --color-mainBlue:#2363B2;
+  --color-textDark:#333333;
+  --color-textGray:#666666;
+  --color-separator: #A6A6A8;
+  --color-buttonColor: #4A90E2;
+  --color-textLightgray:#A9A9A9;
+  --color-thirdGray:rgba(60, 60, 67, 0.3);
+  --color-fourthGray:#969696;
+  
 }
 @font-face {
   font-family: "SF Pro Display";

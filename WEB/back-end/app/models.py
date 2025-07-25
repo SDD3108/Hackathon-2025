@@ -52,8 +52,9 @@ class Lecture(models.Model):
 
 
     def __str__(self):
-        return f"{self.subject.title} - {self.created_at}"
-
+        return f"{self.subject.name} - {self.created_at}"
+    class Meta:
+        ordering = ['-created_at']
 
 
 class TimePoint(models.Model):
@@ -91,4 +92,18 @@ class Schedule(models.Model):
     subject_type = models.CharField(max_length=1, choices=SUBJECT_TYPE, default=1)
 
     def __str__(self):
-        return f'{self.subject.name} - {self.group.name} - {self.get_day_display()} {self.time}'
+        return f'{self.subject.name} - {self.group.name} - {self.get_day_display()} {self.date}'
+
+
+class Favorite(models.Model):
+    user = models.ForeignKey('User', on_delete=models.CASCADE, related_name='favorite')
+    lecture = models.ForeignKey('Lecture', on_delete=models.CASCADE, related_name='favorited_by')
+    added_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('user', 'lecture')
+        verbose_name = 'Favorite Lecture'
+        verbose_name_plural = 'Favorite Lectures'
+
+    def __str__(self):
+        return f"{self.user.email} - {self.lecture.title}"

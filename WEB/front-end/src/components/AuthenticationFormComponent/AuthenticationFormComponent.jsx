@@ -1,10 +1,8 @@
-"use client";
-import React, { useState } from "react"
+"use client"
+import React from "react"
 import { Button } from "@/src/ui/button"
 import { Input } from "@/src/ui/input"
 import { Label } from "@/src/ui/label"
-// import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/src/ui/card"
-// import { Eye, EyeOff } from 'lucide-react'
 import useAuthenticationStore from "@/src/store/AuthenticationStore/AuthenticationStore"
 import { useForm } from "react-hook-form"
 import {Form,FormControl,FormField,FormItem,FormLabel,FormMessage} from "@/src/ui/form"
@@ -26,7 +24,7 @@ const AuthenticationFormComponent = () => {
       password: data.password,
     })
     if(success){
-      router.push("/");
+      router.push("/")
       // заменить на toast
       console.log("Login successful!");
     }

@@ -23,6 +23,6 @@
       "@/*": ["./*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/components/AuthenticationFormComponent/AuthenticationFormComponent.jsx", "src/pageBuilders/SettingsPageBuilder/SettingsPageBuilder.jsx", "app/(authentication)/signapp/authentication/signin/page.jsxsignin/page.jsx", "app/(pages)/settings/page.jsx", "src/store/AuthenticationStore/AuthenticationStore.js", "src/components/SettingsComponent/SettingsComponent.jsx", "src/pageBuilders/LecturePageBuilder/LecturePageBuilder.jsx", "src/pageBuilders/MainPageBuilder/MainPageBuilder.ksx"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/components/AuthenticationFormComponent/AuthenticationFormComponent.jsx", "src/pageBuilders/SettingsPageBuilder/SettingsPageBuilder.jsx", "app/(authentication)/signapp/authentication/signin/page.jsxsignin/page.jsx", "app/(pages)/settings/page.jsx", "src/store/AuthenticationStore/AuthenticationStore.js", "src/components/SettingsComponent/SettingsComponent.jsx", "src/pageBuilders/LecturePageBuilder/LecturePageBuilder.jsx", "src/pageBuilders/MainPageBuilder/MainPageBuilder.ksx", "src/hooks/GetCurrentDatasApiHook/GetCurrentDatasApiHook.jsx", "src/pageBuilders/ProfilePageBuilder/ProfilePageBuilder.jsx", "src/utils/tokenDecoder/GetDatasApiHook/GetDatasApiHook.jsx", "src/pageBuilders/LecturesPageBuilder/LecturesPageBuilder.jsx"],
   "exclude": ["node_modules"]
 }

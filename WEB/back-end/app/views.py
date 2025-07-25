@@ -13,10 +13,10 @@ from .serializers import (
     LectureSerializer,
     ScheduleSerializer,
     UserSerializer,
-    LectureCreateSerializer,
+    # LectureCreateSerializer,
     FavoriteSerializer,
 )
-from .vertex_ai import analyze_lecture_video, upload_to_gcs
+# from .vertex_ai import analyze_lecture_video, upload_to_gcs
 from decouple import config
 
 
@@ -93,50 +93,50 @@ class FavoriteViewSet(viewsets.ModelViewSet):
         return queryset
 
 
-class LectureCreateView(APIView):
-    """
-    Ожидаемые данные для создания лекции (POST-запрос):
+# class LectureCreateView(APIView):
+#     """
+#     Ожидаемые данные для создания лекции (POST-запрос):
 
-    - subject: ID предмета (целое число)
-    - teacher: ID преподавателя (целое число)
-    - video: файл видео (multipart/form-data)
+#     - subject: ID предмета (целое число)
+#     - teacher: ID преподавателя (целое число)
+#     - video: файл видео (multipart/form-data)
 
-    Пример запроса (multipart/form-data):
-        subject: 1
-        teacher: 5
-        video: <файл>
+#     Пример запроса (multipart/form-data):
+#         subject: 1
+#         teacher: 5
+#         video: <файл>
 
-    После загрузки видео, заголовок и текст лекции будут автоматически сгенерированы и сохранены.
-    """
-    parser_classes = [MultiPartParser, FormParser]
+#     После загрузки видео, заголовок и текст лекции будут автоматически сгенерированы и сохранены.
+#     """
+#     parser_classes = [MultiPartParser, FormParser]
 
-    def post(self, request, *args, **kwargs):
-        serializer = LectureCreateSerializer(data=request.data)
-        if serializer.is_valid():
-            lecture = serializer.save()
+#     def post(self, request, *args, **kwargs):
+#         serializer = LectureCreateSerializer(data=request.data)
+#         if serializer.is_valid():
+#             lecture = serializer.save()
 
-            # Загружаем файл в GCS
-            local_path = lecture.video.path
-            filename = os.path.basename(local_path)
-            gcs_uri = upload_to_gcs(local_path, config("VERTEX_BUCKET"), f"videos/{filename}")
+#             # Загружаем файл в GCS
+#             local_path = lecture.video.path
+#             filename = os.path.basename(local_path)
+#             gcs_uri = upload_to_gcs(local_path, config("VERTEX_BUCKET"), f"videos/{filename}")
 
-            # Запускаем анализ
-            try:
-                analysis_result = analyze_lecture_video(gcs_uri)
+#             # Запускаем анализ
+#             try:
+#                 analysis_result = analyze_lecture_video(gcs_uri)
 
-                lecture.title = analysis_result['title']
-                lecture.lecture_text = analysis_result['transcript']
-                lecture.save()
+#                 lecture.title = analysis_result['title']
+#                 lecture.lecture_text = analysis_result['transcript']
+#                 lecture.save()
 
-                for point in analysis_result['timepoints']:
-                    TimePoint.objects.create(
-                        name=point.get("name", 0),
-                        time=point.get("time", ""),
-                        lecture=lecture
-                    )
+#                 for point in analysis_result['timepoints']:
+#                     TimePoint.objects.create(
+#                         name=point.get("name", 0),
+#                         time=point.get("time", ""),
+#                         lecture=lecture
+#                     )
 
-                return Response({'message': 'Lecture analyzed and saved'}, status=status.HTTP_201_CREATED)
-            except Exception as e:
-                return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+#                 return Response({'message': 'Lecture analyzed and saved'}, status=status.HTTP_201_CREATED)
+#             except Exception as e:
+#                 return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

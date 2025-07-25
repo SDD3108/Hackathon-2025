@@ -47,3 +47,10 @@ class LectureCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Lecture
         fields = ['id', 'subject', 'teacher', 'video']
+
+from .models import Favorite
+
+class FavoriteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Favorite
+        fields = '__all__'

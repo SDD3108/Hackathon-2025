@@ -6,8 +6,16 @@ from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.views import APIView
 from rest_framework import status
 from rest_framework.response import Response
-from .models import Group, Subject, Lecture, Schedule, User, TimePoint
-from .serializers import GroupSerializer, SubjectSerializer, LectureSerializer, ScheduleSerializer, UserSerializer, LectureCreateSerializer
+from .models import Group, Subject, Lecture, Schedule, User, TimePoint, Favorite
+from .serializers import (
+    GroupSerializer,
+    SubjectSerializer,
+    LectureSerializer,
+    ScheduleSerializer,
+    UserSerializer,
+    LectureCreateSerializer,
+    FavoriteSerializer,
+)
 from .vertex_ai import analyze_lecture_video, upload_to_gcs
 from decouple import config
 
@@ -69,6 +77,20 @@ class ScheduleViewSet(viewsets.ModelViewSet):
 
         return queryset
 
+
+class FavoriteViewSet(viewsets.ModelViewSet):
+    queryset = Favorite.objects.all()
+    serializer_class = FavoriteSerializer
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        user_id = self.request.query_params.get('user')
+        lecture_id = self.request.query_params.get('lecture')
+        if user_id:
+            queryset = queryset.filter(user__id=user_id)
+        if lecture_id:
+            queryset = queryset.filter(lecture__id=lecture_id)
+        return queryset
 
 
 class LectureCreateView(APIView):

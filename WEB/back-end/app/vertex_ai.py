@@ -1,7 +1,6 @@
 # lectures/ai_utils.py
 import os
 import json
-from google.cloud import aiplatform
 from google.oauth2 import service_account
 from google.cloud import storage
 from django.conf import settings
@@ -20,6 +19,7 @@ def upload_to_gcs(local_path, bucket_name, destination_blob_name):
     return f"gs://{bucket_name}/{destination_blob_name}"
 
 def analyze_lecture_video(gcs_uri):
+    from google.cloud import aiplatform
     aiplatform.init(
         project=config("VERTEX_PROJECT"),
         location=config("VERTEX_LOCATION"),

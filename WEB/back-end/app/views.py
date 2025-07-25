@@ -94,6 +94,22 @@ class FavoriteViewSet(viewsets.ModelViewSet):
 
 
 class LectureCreateView(APIView):
+    """
+    Ожидаемые данные для создания лекции (POST-запрос):
+
+    - subject: ID предмета (целое число)
+    - teacher: ID преподавателя (целое число)
+    - video: файл видео (multipart/form-data)
+
+    Пример запроса (multipart/form-data):
+        subject: 1
+        teacher: 5
+        video: <файл>
+
+    После загрузки видео, заголовок и текст лекции будут автоматически сгенерированы и сохранены.
+    """
+    parser_classes = [MultiPartParser, FormParser]
+
     def post(self, request, *args, **kwargs):
         serializer = LectureCreateSerializer(data=request.data)
         if serializer.is_valid():

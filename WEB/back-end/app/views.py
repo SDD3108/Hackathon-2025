@@ -158,6 +158,8 @@ class LectureCreateView(APIView):
             print(video_file)
 
             # 1. Загрузка файла в GCS
+            bucket = storage_client.bucket(GCS_BUCKET_NAME)
+
             file_name = f"videos/{uuid.uuid4()}_{video_file.name}"
             blob = bucket.blob(file_name)
             
@@ -168,7 +170,6 @@ class LectureCreateView(APIView):
             video_url = f"https://storage.cloud.google.com/{GCS_BUCKET_NAME}/{file_name}"
             print(f"Файл успешно загружен. URL: {video_url}")
 
-            bucket = storage_client.bucket(GCS_BUCKET_NAME)
             blob = bucket.blob(video_url)
 
             # # Используем BytesIO для сохранения данных в памяти

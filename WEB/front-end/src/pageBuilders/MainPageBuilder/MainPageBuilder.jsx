@@ -5,88 +5,118 @@ import { Button } from '@/src/ui/button'
 import { motion } from 'framer-motion'
 import { Skeleton } from '@/src/ui/skeleton'
 import useAuthenticationStore from '@/src/store/AuthenticationStore/AuthenticationStore'
-import { User } from 'lucide-react'
-import { Label } from '@/src/ui/label'
+import axios from 'axios'
+import Header from '@/src/common/header/Header'
 
 const MainPageBuilder = () => {
   const { user } = useAuthenticationStore()
   const router = useRouter()
-  const [schedule, setSchedule] = useState([])
+  const [schedules, setSchedules] = useState([])
+  const [subjects, setSubjects] = useState([])
+  const [lectures, setLectures] = useState([])
+  const [groups, setGroups] = useState([])
   const [loading, setLoading] = useState(true)
+  
   const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
-  const timeSlots = Array.from({length: 9},(_, i)=> `${8 + i}:00`)
+  const timeSlots = Array.from({length: 9}, (_, i) => `${8 + i}:00`)
+  
+  // Проверка аутентификации
   const isAuthenticated = ()=>{
-    const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null
-    if(user !== ''){
-      return token && user
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('token') && user
     }
-    return 'Error'
+    return false
   }
-  useEffect(()=>{
-    if(!isAuthenticated()){
+
+  // Функция для получения данных с API
+  const fetchData = async () => {
+    try {
+      const API_URL = process.env.NEXT_PUBLIC_API_URL
+      
+      // Создаем экземпляр Axios с базовым URL и заголовками
+      const api = axios.create({
+        baseURL: API_URL,
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+      })
+      
+      // Параллельная загрузка данных
+      const [
+        { data: schedulesData },
+        { data: subjectsData },
+        { data: lecturesData },
+        { data: groupsData }
+      ] = await Promise.all([
+        api.get('/api/schedules'),
+        api.get('/api/subjects'),
+        api.get('/api/lectures'),
+        api.get('/api/groups')
+      ])
+
+      // Сохранение данных в состояние
+      setSchedules(schedulesData)
+      setSubjects(subjectsData)
+      setLectures(lecturesData)
+      setGroups(groupsData)
+      
+    } catch (error) {
+      console.error('Error fetching data:', error)
+    } finally {
       setLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    if(isAuthenticated()){
+      router.push('/signin')
       return
     }
-    const mockSchedule = [
-      {
-        day: 'Monday',
-        lessons: [
-          { 
-            id: '101', 
-            title: 'Математика', 
-            startTime: '9:00', 
-            subject: { typeOfSubject: 2 }
-          },
-          { 
-            id: '102', 
-            title: 'Физика', 
-            startTime: '11:00', 
-            subject: { typeOfSubject: 1 }
-          },
-        ]
-      },
-      {
-        day: 'Tuesday',
-        lessons: [
-          { 
-            id: '201', 
-            title: 'Программирование', 
-            startTime: '10:00', 
-            subject: { typeOfSubject: 2 }
-          },
-        ]
-      },
-    ]
-    const timer = setTimeout(()=>{
-      setSchedule(mockSchedule)
-      setLoading(false)
-    },1000)
     
-    return () => clearTimeout(timer)
-  },[user])
+    fetchData()
+  }, [user])
 
-  const getLessonDuration = (type)=>{
-    return type == 1 ? 40 : 80
+  // Получение продолжительности занятия
+  const getLessonDuration = (isDouble) => {
+    return isDouble ? 80 : 40
   }
-  // const calculateEndTime = (startTime,duration)=>{
-  //   const [hours, minutes] = startTime.split(':').map(Number)
-  //   const totalMinutes = hours * 60 + minutes + duration
-  //   const endHours = Math.floor(totalMinutes / 60)
-  //   const endMinutes = totalMinutes % 60
-  //   return `${endHours}:${endMinutes < 10 ? '0' : ''}${endMinutes}`
-  // }
-  const findLesson = (day,timeSlot)=>{
-    const daySchedule = schedule.find((d)=> d.day == day)
-    if(!daySchedule){
-      return null
-    }
-    
-    return daySchedule.lessons.find((lesson)=>{
-      const lessonHour = parseInt(lesson.startTime.split(':')[0])
-      const slotHour = parseInt(timeSlot.split(':')[0])
-      return lessonHour == slotHour
-    })
+
+  // Расчет времени окончания занятия
+  const calculateEndTime = (startTime, duration) => {
+    const [hours, minutes] = startTime.split(':').map(Number)
+    const totalMinutes = hours * 60 + minutes + duration
+    const endHours = Math.floor(totalMinutes / 60)
+    const endMinutes = totalMinutes % 60
+    return `${endHours}:${endMinutes < 10 ? '0' : ''}${endMinutes}`
   }
+
+  // Поиск занятия для конкретного дня и времени
+  const findScheduleItem = (day, timeSlot) => {
+    return schedules.find(item => 
+      item.dayOfWeek === day && 
+      item.startTime === timeSlot
+    )
+  }
+
+  // Получение информации о предмете
+  const getSubjectInfo = (scheduleItem) => {
+    if (!scheduleItem) return null
+    return subjects.find(subject => subject.id === scheduleItem.subjectId)
+  }
+
+  // Получение информации о лекции
+  const getLectureInfo = (scheduleItem) => {
+    if (!scheduleItem) return null
+    return lectures.find(lecture => lecture.id === scheduleItem.lectureId)
+  }
+
+  // Получение информации о группе
+  const getGroupInfo = (scheduleItem) => {
+    if (!scheduleItem) return null
+    return groups.find(group => group.id === scheduleItem.classId)
+  }
+
+  // Рендер скелетона загрузки
   const renderSkeleton = () => (
     <div className="w-full max-w-6xl">
       <motion.div
@@ -126,28 +156,20 @@ const MainPageBuilder = () => {
       </motion.div>
     </div>
   )
-  // if not authenticated
+
+  // Если не аутентифицирован
   if(!isAuthenticated() && !loading){
     return (
-      <div className="w-full min-h-screen bg-white">
-      
+      <div className="w-full min-h-screen flex items-center justify-center bg-white">
+        
       </div>
     )
   }
 
   return (
     <div className="w-full min-h-screen flex flex-col bg-mainBlue">
-      <header className="flex justify-between min-h-16 text-white p-8 border-b bg-white shadow-xl">
-        <div className='flex space-x-3'>
-          <div></div>
-          <Label className='text-mainBlue text-3xl font-semibold flex gap-0'>Lec<span className='text-black'>Sure</span></Label>
-        </div>        
-        <div className='w-16 h-16 bg-newWhite rounded-full cursor-pointer flex justify-center items-center' onClick={()=>router.push('/profile')}>
-          <User width={40} color='#000000' className='h-[2.5rem]' strokeWidth='1' />
-        </div>
-      </header>
-
-      <div className="flex-1 flex justify-center items-start pt-18 px-4">
+      <Header/>
+      <div className="flex-1 flex justify-center items-start px-4 py-8">
         {loading ? (
           renderSkeleton()
         ) : (
@@ -155,7 +177,7 @@ const MainPageBuilder = () => {
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="bg-white rounded-t-sm shadow-lg p-6 h-screen"
+              className="bg-white rounded-lg shadow-lg p-6"
             >
               <h2 className="text-2xl font-bold mb-6 text-center">Расписание занятий</h2>
               
@@ -170,36 +192,63 @@ const MainPageBuilder = () => {
                 {timeSlots.map((timeSlot, timeIndex) => (
                   <React.Fragment key={timeIndex}>
                     <div className="col-span-1 text-right pr-2 py-3 text-sm text-gray-500">
-                      {timeSlot} 
-                      {/* тут должно быть написано начало и конец занятия типо во сколько начинается и во сколько заканчивается */}
-                      {/* {lesson.startTime} - {calculateEndTime(lesson.startTime, duration)} */}
+                      {timeSlot}
                     </div>
                     
-                    {daysOfWeek.map((day, dayIndex)=>{
-                      const lesson = findLesson(day, timeSlot);
-                      if (lesson && timeIndex > 0) {
-                        const prevTimeSlot = timeSlots[timeIndex - 1];
-                        const prevLesson = findLesson(day, prevTimeSlot);
-                        if (prevLesson && prevLesson.id == lesson.id) {
-                          return null;
-                        }
+                    {daysOfWeek.map((day, dayIndex) => {
+                      const scheduleItem = findScheduleItem(day, timeSlot)
+                      const subject = scheduleItem ? getSubjectInfo(scheduleItem) : null
+                      const lecture = scheduleItem ? getLectureInfo(scheduleItem) : null
+                      const group = scheduleItem ? getGroupInfo(scheduleItem) : null
+                      
+                      // Пропускаем ячейки, если занятие длинное и уже отображено
+                      if (scheduleItem && timeIndex > 0) {
+                        const prevTimeSlot = timeSlots[timeIndex - 1]
+                        const prevScheduleItem = findScheduleItem(day, prevTimeSlot)
+                        if (prevScheduleItem && prevScheduleItem.id === scheduleItem.id) return null
                       }
                       
-                      const duration = lesson ? getLessonDuration(lesson.subject.typeOfSubject) : 0;
-                      const heightClass = duration == 80 ? 'h-24' : 'h-16';
-                      const bgClass = lesson ? (duration == 80 ? 'bg-blue-100' : 'bg-blue-50') : 'bg-gray-50';
+                      const duration = scheduleItem ? getLessonDuration(scheduleItem.isDouble) : 0
+                      const heightClass = duration === 80 ? 'h-24' : 'h-16'
+                      const bgClass = scheduleItem ? (duration === 80 ? 'bg-blue-100' : 'bg-blue-50') : 'bg-gray-50'
                       
                       return (
-                        <div key={dayIndex} className={`col-span-1 p-2 ${bgClass} ${heightClass} border rounded-md`}>
-                          {lesson && (
-                            <motion.div initial={{opacity: 0}} animate={{opacity: 1}} className="h-full flex flex-col">
-                              <Button variant="ghost" className="h-full text-left flex flex-col justify-center cursor-pointer" onClick={() => router.push(`/lecture/${lesson.id}`)}>
-                                <span className="font-medium">{lesson.title}</span>
+                        <div 
+                          key={dayIndex} 
+                          className={`col-span-1 p-2 ${bgClass} ${heightClass} border rounded-md transition-all hover:shadow-sm`}
+                        >
+                          {scheduleItem && lecture && group && (
+                            <motion.div 
+                              initial={{ opacity: 0 }}
+                              animate={{ opacity: 1 }}
+                              className="h-full flex flex-col"
+                            >
+                              <Button 
+                                variant="ghost" 
+                                className="h-full text-left flex flex-col justify-between p-2 hover:bg-transparent"
+                                onClick={() => router.push(`/lecture/${lecture.id}`)}
+                              >
+                                <div>
+                                  <span className="font-medium text-sm block mb-1 text-gray-800">
+                                    {lecture.title}
+                                  </span>
+                                  <span className="text-xs text-gray-500 block">
+                                    {timeSlot} - {calculateEndTime(timeSlot, duration)}
+                                  </span>
+                                </div>
+                                <div className="flex justify-between items-end">
+                                  <span className="text-[0.65rem] text-gray-400 mt-1">
+                                    Ауд. {scheduleItem.classroom}
+                                  </span>
+                                  <span className="text-[0.65rem] text-gray-400">
+                                    {group.title}
+                                  </span>
+                                </div>
                               </Button>
                             </motion.div>
                           )}
                         </div>
-                      );
+                      )
                     })}
                   </React.Fragment>
                 ))}

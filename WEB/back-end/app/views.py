@@ -159,11 +159,11 @@ class LectureCreateView(APIView):
             print(video_file)
 
             # 1. Загрузка файла в GCS
-            file_name = f"videos/{uuid.uuid4()}_{video_file}"
+            file_name = f"videos/{uuid.uuid4()}_{video_file.name}"
             blob = bucket.blob(file_name)
             
             print(f"Загрузка файла '{video_file}' в GCS...")
-            blob.upload_from_file(video_file.file, content_type='video/mp4')
+            blob.upload_from_file(video_file, content_type='video/mp4')
             
             # Получаем публичный URL файла в GCS
             video_url = f"https://storage.googleapis.com/{GCS_BUCKET_NAME}/{file_name}"
@@ -193,6 +193,8 @@ class LectureCreateView(APIView):
             
             # 4. Сохранение данных в БД
             title = json_response.get('title', 'Без названия')
+            if len(title) > 100:
+                title = title[:99]
             transcription = json_response.get('transcription', '')
             time_points_data = json_response.get('time_points', [])
 

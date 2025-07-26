@@ -48,7 +48,7 @@ class User(AbstractUser):
 
 
 class Lecture(models.Model):
-    title = models.CharField(max_length=100)
+    title = models.TextField()
     teacher = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, limit_choices_to={'is_teacher': True}, related_name='lectures')
     lecture_text = models.TextField()
     video = models.URLField(blank=True, null=True)

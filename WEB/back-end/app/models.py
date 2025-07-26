@@ -15,6 +15,8 @@ class Group(models.Model):
 
 class Subject(models.Model):
     name = models.CharField(max_length=100)
+    class_room = models.CharField(max_length=255)
+
 
     def __str__(self):
         return self.name
@@ -30,7 +32,7 @@ class User(AbstractUser):
     is_student = models.BooleanField(default=False)
     is_admin = models.BooleanField(default=False)
     subject = models.ForeignKey(Subject, on_delete=models.CASCADE, related_name='users', null=True)
-    group = models.ForeignKey(Group, on_delete=models.SET_NULL, null=True, blank=True, related_name='users')
+
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username']
@@ -51,7 +53,7 @@ class Lecture(models.Model):
     teacher = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, limit_choices_to={'is_teacher': True}, related_name='lectures')
     lecture_text = models.TextField()
     video = models.FileField(upload_to='videos/', blank=True, null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateField(auto_now_add=True)
 
 
     def __str__(self):
@@ -83,12 +85,10 @@ class Schedule(models.Model):
 
     
     dateOfDay = models.CharField(max_length=100)
-    subject = models.ForeignKey(Subject, on_delete=models.CASCADE, related_name='schedule_entries')
     group = models.ForeignKey(Group, on_delete=models.CASCADE, related_name='schedule_entries',default=1)
     lecture = models.ForeignKey(Lecture, on_delete=models.CASCADE, related_name='schedule_entries')
     dayOfWeek = models.CharField(max_length=3, choices=DAYS_OF_WEEK)
     dateOfWeek= models.CharField(max_length=100)
-    class_room = models.CharField(max_length=255)
     is_double = models.BooleanField(default=False)
 
     def get_dayOfWeek_display(self):

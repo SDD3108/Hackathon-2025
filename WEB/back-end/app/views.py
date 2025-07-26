@@ -132,7 +132,7 @@ class LectureCreateView(APIView):
                 "title": lecture.title,
                 "teacher": lecture.teacher.email if lecture.teacher else None,
                 "lecture_text": lecture.lecture_text,
-                "video": lecture.video.url if lecture.video else None,
+                "video": lecture.video if lecture.video else None,
                 "created_at": lecture.created_at,
             })
         return Response(data, status=status.HTTP_200_OK)

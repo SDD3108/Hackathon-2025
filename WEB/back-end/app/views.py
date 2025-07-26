@@ -166,7 +166,7 @@ class LectureCreateView(APIView):
             blob = bucket.blob(file_name)
             
             print(f"Загрузка файла '{video_file}' в GCS...")
-            blob.upload_from_file(video_file, content_type='video/mp4', predefined_acl='publicRead')
+            blob.upload_from_file(video_file, content_type='video/mp4')
             
             # Получаем публичный URL файла в GCS
             video_url = f"https://storage.cloud.google.com/{GCS_BUCKET_NAME}/{file_name}"

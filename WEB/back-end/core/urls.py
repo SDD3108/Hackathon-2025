@@ -5,7 +5,7 @@ from django.urls import include
 from django.conf import settings
 from django.conf.urls.static import static
 from rest_framework.routers import DefaultRouter
-from app.views import GroupViewSet, SubjectViewSet, LectureViewSet, ScheduleViewSet, UserView, FavoriteViewSet
+from app.views import GroupViewSet, SubjectViewSet, LectureViewSet, ScheduleViewSet, UserView, FavoriteViewSet, LectureCreateView
 # LectureCreateView
 
 router = DefaultRouter()
@@ -16,12 +16,13 @@ router.register(r'schedules', ScheduleViewSet, basename='schedule')
 router.register(r'favorites', FavoriteViewSet, basename='favorite')
 router.register(r'users', UserView, basename='user')
 
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('auth/', include('djoser.urls')),
     path('auth/', include('djoser.urls.jwt')),
     path('api/', include(router.urls)),
-    # path('api/lectures/create/', LectureCreateView.as_view(), name='lecture-create'),
+    path('api/lectures/create/', LectureCreateView.as_view(), name='lecture-create'),
 ]
 
 if settings.DEBUG:

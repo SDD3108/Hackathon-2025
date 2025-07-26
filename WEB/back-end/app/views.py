@@ -93,50 +93,133 @@ class FavoriteViewSet(viewsets.ModelViewSet):
         return queryset
 
 
-# class LectureCreateView(APIView):
-#     """
-#     Ожидаемые данные для создания лекции (POST-запрос):
+import google.generativeai as genai
+import json
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+from rest_framework.parsers import MultiPartParser, FormParser
+from django.conf import settings
+from google.cloud import storage
+import uuid
+from decouple import config
 
-#     - subject: ID предмета (целое число)
-#     - teacher: ID преподавателя (целое число)
-#     - video: файл видео (multipart/form-data)
 
-#     Пример запроса (multipart/form-data):
-#         subject: 1
-#         teacher: 5
-#         video: <файл>
+# Импорт моделей Django
+from .models import Lecture, TimePoint, Subject, User  # Замените 'Teacher' на вашу модель пользователя
 
-#     После загрузки видео, заголовок и текст лекции будут автоматически сгенерированы и сохранены.
-#     """
-#     parser_classes = [MultiPartParser, FormParser]
+# --- Настройка Google Gemini API ---
+api_key = 'AIzaSyDS5cyaLf35kxxRhH-vL_OIFu1J9A29KHk'
+genai.configure(api_key=api_key)
+model = genai.GenerativeModel("gemini-2.5-flash")
 
-#     def post(self, request, *args, **kwargs):
-#         serializer = LectureCreateSerializer(data=request.data)
-#         if serializer.is_valid():
-#             lecture = serializer.save()
+import os
+os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = config('VERTEX_SERVICE_ACCOUNT_FILE')
 
-#             # Загружаем файл в GCS
-#             local_path = lecture.video.path
-#             filename = os.path.basename(local_path)
-#             gcs_uri = upload_to_gcs(local_path, config("VERTEX_BUCKET"), f"videos/{filename}")
+# --- Настройка Google Cloud Storage ---
+GCS_BUCKET_NAME = "lecture-videos-bucket"
+storage_client = storage.Client()
+bucket = storage_client.bucket(GCS_BUCKET_NAME)
 
-#             # Запускаем анализ
-#             try:
-#                 analysis_result = analyze_lecture_video(gcs_uri)
+class LectureCreateView(APIView):
+    """
+    Принимает видеофайл, загружает его в GCS, анализирует с помощью Gemini API,
+    и сохраняет транскрипцию и метаданные в базу данных.
+    """
+    parser_classes = (MultiPartParser, FormParser)
 
-#                 lecture.title = analysis_result['title']
-#                 lecture.lecture_text = analysis_result['transcript']
-#                 lecture.save()
+    def post(self, request, *args, **kwargs):
+        video_file = request.data.get('video')
+        subject_id = request.data.get('subject_id')
+        teacher_id = request.data.get('teacher_id')
 
-#                 for point in analysis_result['timepoints']:
-#                     TimePoint.objects.create(
-#                         name=point.get("name", 0),
-#                         time=point.get("time", ""),
-#                         lecture=lecture
-#                     )
+        if not all([video_file, subject_id, teacher_id]):
+            return Response(
+                {"error": "Файл 'video', 'subject_id' и 'teacher_id' обязательны."},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        try:
+            # Получение объектов Subject и Teacher
+            subject = Subject.objects.get(id=subject_id)
+            teacher = User.objects.get(id=teacher_id)
 
-#                 return Response({'message': 'Lecture analyzed and saved'}, status=status.HTTP_201_CREATED)
-#             except Exception as e:
-#                 return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            # 1. Загрузка файла в GCS
+            file_name = f"videos/{uuid.uuid4()}_{video_file.name}"
+            blob = bucket.blob(file_name)
+            
+            print(f"Загрузка файла '{video_file.name}' в GCS...")
+            blob.upload_from_file(video_file, content_type='video/mp4')
+            
+            # Получаем публичный URL файла в GCS
+            video_url = f"https://storage.googleapis.com/{GCS_BUCKET_NAME}/{file_name}"
+            print(f"Файл успешно загружен. URL: {video_url}")
 
-#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            # 2. Формируем промпт для Gemini
+            prompt = f"""
+# Analyze this full lecture video and provide:
+# 1. A suitable title for the lecture (max 100 characters)
+# 2. A complete transcription of the lecture
+# 3. Time points in the format: MM:SS Description
+# Return the response in JSON format.
+# Video path: {video_url}
+# """
+            
+            # 3. Отправляем запрос в Gemini
+            print("Генерация контента из видео...")
+            response = model.generate_content(
+                contents=[prompt],
+                generation_config={"response_mime_type": "application/json"}
+            )
+            
+            json_response = json.loads(response.text)
+            
+            # 4. Сохранение данных в БД
+            title = json_response.get('title', 'Без названия')
+            transcription = json_response.get('transcription', '')
+            time_points_data = json_response.get('time_points', [])
+
+            # Создание новой записи о лекции
+            lecture = Lecture.objects.create(
+                title=title,
+                subject=subject,
+                teacher=teacher,
+                lecture_text=transcription,
+                video_url=video_url  # Сохраняем URL видео
+            )
+
+            # Создание временных меток
+            for time_point_str in time_points_data:
+                try:
+                    time_str, description = time_point_str.split(' ', 1)
+                    TimePoint.objects.create(
+                        lecture=lecture,
+                        time=time_str.strip(),
+                        name=description.strip()
+                    )
+                except ValueError:
+                    # Обработка некорректного формата временной метки
+                    print(f"Пропущена некорректная временная метка: {time_point_str}")
+
+            # Возвращаем успешный ответ
+            return Response(
+                {"message": "Видео успешно загружено, проанализировано и сохранено в БД.", "lecture_id": lecture.id},
+                status=status.HTTP_201_CREATED
+            )
+
+        except Subject.DoesNotExist:
+            return Response(
+                {"error": f"Предмет с ID {subject_id} не найден."},
+                status=status.HTTP_404_NOT_FOUND
+            )
+        except User.DoesNotExist:
+            return Response(
+                {"error": f"Преподаватель с ID {teacher_id} не найден."},
+                status=status.HTTP_404_NOT_FOUND
+            )
+        except Exception as e:
+            # Обработка возможных ошибок
+            return Response(
+                {"error": f"Произошла ошибка: {e}"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )

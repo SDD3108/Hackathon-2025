@@ -49,7 +49,7 @@ class Lecture(models.Model):
     lecture_text = models.TextField()
     video = models.FileField(upload_to='videos/', blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
-
+    
 
     def __str__(self):
         return f"{self.subject.name} - {self.created_at}"
@@ -84,12 +84,16 @@ class Schedule(models.Model):
     group = models.ForeignKey(Group, on_delete=models.CASCADE, related_name='schedule_entries',default=1)
     lecture = models.ForeignKey(Lecture, on_delete=models.CASCADE, related_name='schedule_entries')
     dayOfWeek = models.CharField(max_length=3, choices=DAYS_OF_WEEK)
+    dateOfWeek= models.CharField(max_length=100)
     class_room = models.CharField(max_length=255)
-    dateOfWeek = models.CharField(max_length=100)
     is_double = models.BooleanField(default=False)
 
+    def get_dayOfWeek_display(self):
+        # Mimic Django's get_FOO_display for custom CharField with choices
+        return dict(self.DAYS_OF_WEEK).get(self.dayOfWeek, self.dayOfWeek)
+
     def __str__(self):
-        return f'{self.subject.name} - {self.group.name} - {self.get_day_display()} {self.date}'
+        return f'{self.subject.name} - {self.group.name} - {self.get_dayOfWeek_display()}'
 
 
 class Favorite(models.Model):

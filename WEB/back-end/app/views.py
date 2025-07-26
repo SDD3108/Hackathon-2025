@@ -132,7 +132,7 @@ class LectureCreateView(APIView):
                 "title": lecture.title,
                 "teacher": lecture.teacher.email if lecture.teacher else None,
                 "lecture_text": lecture.lecture_text,
-                "video": lecture.video if lecture.video else None,
+                "video": lecture.video.url if lecture.video else None,
                 "created_at": lecture.created_at,
             })
         return Response(data, status=status.HTTP_200_OK)
@@ -163,7 +163,7 @@ class LectureCreateView(APIView):
             blob = bucket.blob(file_name)
             
             print(f"Загрузка файла '{video_file}' в GCS...")
-            blob.upload_from_file(video_file, content_type='video/mp4')
+            blob.upload_from_file(video_file.file, content_type='video/mp4')
             
             # Получаем публичный URL файла в GCS
             video_url = f"https://storage.googleapis.com/{GCS_BUCKET_NAME}/{file_name}"
@@ -186,7 +186,10 @@ class LectureCreateView(APIView):
                 generation_config={"response_mime_type": "application/json"}
             )
             
-            json_response = json.loads(response.text)
+            try:
+                json_response = json.loads(response.text)
+            except Exception as e:
+                return Response({"error": f"Ошибка парсинга JSON от Gemini: {e}", "raw": response.text}, status=500)
             
             # 4. Сохранение данных в БД
             title = json_response.get('title', 'Без названия')
@@ -242,7 +245,6 @@ class LectureCreateView(APIView):
                 status=status.HTTP_404_NOT_FOUND
             )
         except Exception as e:
-            return Response(
-                {"error": f"Произошла ошибка: {e}"},
-                status=status.HTTP_500_INTERNAL_SERVER_ERROR
-            )
+            import traceback
+            traceback.print_exc()
+            return Response({"error": str(e)}, status=500)

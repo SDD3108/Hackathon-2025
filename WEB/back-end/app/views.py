@@ -153,7 +153,7 @@ class LectureCreateView(APIView):
         
         try:
             # Получение объектов User, Group
-            teacher = User.objects.get(id=user_id, is_teacher=True)
+            teacher = User.objects.get(id=user_id)
             group = Group.objects.get(id=group_id)
 
             print(video_file)

@@ -26,14 +26,14 @@
 #         credentials=credentials,
 #     )
 
-#     prompt = f"""
-#         Analyze this lecture video and provide:
-#         1. A suitable title for the lecture (max 100 characters)
-#         2. A complete transcription of the lecture
-#         3. Time points in the format: MM:SS Description
-#         Return the response in JSON format.
-#         Video path: {gcs_uri}
-#     """
+    # prompt = f"""
+    #     Analyze this lecture video and provide:
+    #     1. A suitable title for the lecture (max 100 characters)
+    #     2. A complete transcription of the lecture
+    #     3. Time points in the format: MM:SS Description
+    #     Return the response in JSON format.
+    #     Video path: {gcs_uri}
+    # """
 
 #     model = aiplatform.TextGenerationModel.from_pretrained("gemini-1.5-pro-preview-0409")
 #     response = model.predict(prompt=prompt, temperature=0.4, max_output_tokens=2048)

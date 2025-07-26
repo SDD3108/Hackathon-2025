@@ -89,7 +89,7 @@ class Schedule(models.Model):
     day = models.CharField(max_length=3, choices=DAYS_OF_WEEK)
     class_room = models.CharField(max_length=255)
     date = models.DateField()
-    subject_type = models.CharField(max_length=1, choices=SUBJECT_TYPE, default=1)
+    is_double = models.BooleanField(default=False)
 
     def __str__(self):
         return f'{self.subject.name} - {self.group.name} - {self.get_day_display()} {self.date}'

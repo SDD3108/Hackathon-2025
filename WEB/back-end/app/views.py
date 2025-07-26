@@ -198,7 +198,7 @@ class LectureCreateView(APIView):
                 title=title,
                 teacher=teacher,
                 lecture_text=transcription,
-                video=video_file  # Сохраняем файл в поле FileField
+                video=video_url      # Сохраняем файл в поле FileField
             )
             
             # Создание временных меток

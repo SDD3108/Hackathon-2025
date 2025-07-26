@@ -51,7 +51,7 @@ class Lecture(models.Model):
     title = models.CharField(max_length=100)
     teacher = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, limit_choices_to={'is_teacher': True}, related_name='lectures')
     lecture_text = models.TextField()
-    video = models.FileField(upload_to='videos/', blank=True, null=True)
+    video = models.URLField(blank=True, null=True)
     created_at = models.DateField(auto_now_add=True)
 
 

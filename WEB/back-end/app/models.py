@@ -73,23 +73,11 @@ class TimePoint(models.Model):
 
 
 class Schedule(models.Model):
-    DAYS_OF_WEEK = [
-        ('MON', 'Понедельник'),
-        ('TUE', 'Вторник'),
-        ('WED', 'Среда'),
-        ('THU', 'Четверг'),
-        ('FRI', 'Пятница'),
-        ('SAT', 'Суббота'),
-        ('SUN', 'Воскресенье'),
-    ]
-
-    
-    dateOfDay = models.CharField(max_length=100)
     group = models.ForeignKey(Group, on_delete=models.CASCADE, related_name='schedule_entries',default=1)
     lecture = models.ForeignKey(Lecture, on_delete=models.CASCADE, related_name='schedule_entries')
-    dayOfWeek = models.CharField(max_length=3, choices=DAYS_OF_WEEK)
-    dateOfWeek= models.CharField(max_length=100)
     is_double = models.BooleanField(default=False)
+    date = models.DateField(auto_now_add=True)
+
 
     def get_dayOfWeek_display(self):
         # Mimic Django's get_FOO_display for custom CharField with choices

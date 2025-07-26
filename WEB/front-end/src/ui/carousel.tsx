@@ -129,7 +129,7 @@ function Carousel({
         {children}
       </div>
     </CarouselContext.Provider>
-  )
+  );
 }
 
 function CarouselContent({ className, ...props }: React.ComponentProps<"div">) {
@@ -150,7 +150,7 @@ function CarouselContent({ className, ...props }: React.ComponentProps<"div">) {
         {...props}
       />
     </div>
-  )
+  );
 }
 
 function CarouselItem({ className, ...props }: React.ComponentProps<"div">) {

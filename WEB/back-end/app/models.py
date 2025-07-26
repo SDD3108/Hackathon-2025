@@ -78,17 +78,14 @@ class Schedule(models.Model):
         ('SUN', 'Воскресенье'),
     ]
 
-    SUBJECT_TYPE = [
-        ('1', 'solo'),
-        ('2', 'double'),
-    ]
-
+    
+    dateOfDay = models.CharField(max_length=100)
     subject = models.ForeignKey(Subject, on_delete=models.CASCADE, related_name='schedule_entries')
     group = models.ForeignKey(Group, on_delete=models.CASCADE, related_name='schedule_entries',default=1)
     lecture = models.ForeignKey(Lecture, on_delete=models.CASCADE, related_name='schedule_entries')
-    day = models.CharField(max_length=3, choices=DAYS_OF_WEEK)
+    dayOfWeek = models.CharField(max_length=3, choices=DAYS_OF_WEEK)
     class_room = models.CharField(max_length=255)
-    date = models.DateField()
+    dateOfWeek = models.CharField(max_length=100)
     is_double = models.BooleanField(default=False)
 
     def __str__(self):

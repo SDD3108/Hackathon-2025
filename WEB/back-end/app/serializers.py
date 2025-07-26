@@ -1,6 +1,6 @@
 from djoser.serializers import UserCreateSerializer as BaseUserCreateSerializer, UserSerializer as BaseUserSerializer
 from rest_framework import serializers
-from .models import User, Group, Subject, Lecture, Schedule, Favorite
+from .models import User, Group, Subject, Lecture, Schedule, Favorite,TimePoint
 
 class UserCreateSerializer(BaseUserCreateSerializer):
     class Meta(BaseUserCreateSerializer.Meta):
@@ -53,4 +53,9 @@ class ScheduleSerializer(serializers.ModelSerializer):
 class FavoriteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Favorite
+        fields = '__all__'
+
+class TimePointSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TimePoint
         fields = '__all__'

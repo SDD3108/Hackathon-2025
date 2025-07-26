@@ -56,7 +56,7 @@ class Lecture(models.Model):
 
 
     def __str__(self):
-        return f"{self.subject.name} - {self.created_at}"
+        return f"{self.title} - {self.created_at}"
     class Meta:
         ordering = ['-created_at']
 

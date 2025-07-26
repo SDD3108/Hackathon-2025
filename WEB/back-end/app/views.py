@@ -15,10 +15,12 @@ from .serializers import (
     UserSerializer,
     # LectureCreateSerializer,
     FavoriteSerializer,
+    TimePointSerializer
 )
 # from .vertex_ai import analyze_lecture_video, upload_to_gcs
 from decouple import config
-
+import os
+os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = config('VERTEX_SERVICE_ACCOUNT_FILE')
 
 class GroupViewSet(viewsets.ModelViewSet):
     queryset = Group.objects.all()
@@ -33,26 +35,19 @@ class UserView(viewsets.ModelViewSet):
     serializer_class = UserSerializer
 
 
+class TimePointViewSet(viewsets.ModelViewSet):
+    queryset = TimePoint.objects.all()
+    serializer_class = TimePointSerializer
+
+
+
 class LectureViewSet(viewsets.ModelViewSet):
     queryset = Lecture.objects.all()
     serializer_class = LectureSerializer
     parser_classes = [MultiPartParser, FormParser]  # <— чтобы можно было загружать видео
 
     # фильтрация по query параметрам: ?subject=1&teacher=5
-    def get_queryset(self):
-        queryset = super().get_queryset()
-        subject_id = self.request.query_params.get('subject')
-        teacher_id = self.request.query_params.get('teacher')
-        group_id = self.request.query_params.get('group')
 
-        if subject_id:
-            queryset = queryset.filter(subject__id=subject_id)
-        if teacher_id:
-            queryset = queryset.filter(teacher__id=teacher_id)
-        if group_id:
-            queryset = queryset.filter(subject__schedule_entries__group__id=group_id).distinct()
-
-        return queryset
 
 class ScheduleViewSet(viewsets.ModelViewSet):
     queryset = Schedule.objects.all()
@@ -113,8 +108,7 @@ api_key = 'AIzaSyDS5cyaLf35kxxRhH-vL_OIFu1J9A29KHk'
 genai.configure(api_key=api_key)
 model = genai.GenerativeModel("gemini-2.5-flash")
 
-import os
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = config('VERTEX_SERVICE_ACCOUNT_FILE')
+
 # --- Настройка Google Cloud Storage ---
 GCS_BUCKET_NAME = "lecture-videos-bucket"
 storage_client = storage.Client()
@@ -132,7 +126,8 @@ class LectureCreateView(APIView):
         user_id = request.data.get('user_id')
         date = request.data.get('date')  # Ожидаем дату в формате YYYY-MM-DD
         group_id = request.data.get('group_id')
-        is_double = request.data.get('is_double')
+        is_double_str = request.data.get('is_double')
+        is_double = True if is_double_str == 'true' else False
 
         if not all([video_file, user_id, date, group_id]):
             return Response(
@@ -145,11 +140,13 @@ class LectureCreateView(APIView):
             teacher = User.objects.get(id=user_id, is_teacher=True)
             group = Group.objects.get(id=group_id)
 
+            print(video_file)
+
             # 1. Загрузка файла в GCS
-            file_name = f"videos/{uuid.uuid4()}_{video_file.name}"
+            file_name = f"videos/{uuid.uuid4()}_{video_file}"
             blob = bucket.blob(file_name)
             
-            print(f"Загрузка файла '{video_file.name}' в GCS...")
+            print(f"Загрузка файла '{video_file}' в GCS...")
             blob.upload_from_file(video_file, content_type='video/mp4')
             
             # Получаем публичный URL файла в GCS

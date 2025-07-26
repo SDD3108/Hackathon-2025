@@ -12,7 +12,13 @@ class Group(models.Model):
     def __str__(self):
         return self.name
 
-        
+
+class Subject(models.Model):
+    name = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.name
+
 
 class User(AbstractUser):
     username = models.CharField(max_length=150, unique=True, blank=True, null=True)
@@ -23,6 +29,7 @@ class User(AbstractUser):
     is_teacher = models.BooleanField(default=False)
     is_student = models.BooleanField(default=False)
     is_admin = models.BooleanField(default=False)
+    subject = models.ForeignKey(Subject, on_delete=models.CASCADE, related_name='users', null=True)
     group = models.ForeignKey(Group, on_delete=models.SET_NULL, null=True, blank=True, related_name='users')
 
     USERNAME_FIELD = 'email'
@@ -35,11 +42,7 @@ class User(AbstractUser):
 
 
 
-class Subject(models.Model):
-    name = models.CharField(max_length=100)
 
-    def __str__(self):
-        return self.name
 
 
 class Lecture(models.Model):
@@ -49,7 +52,7 @@ class Lecture(models.Model):
     lecture_text = models.TextField()
     video = models.FileField(upload_to='videos/', blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    
+
 
     def __str__(self):
         return f"{self.subject.name} - {self.created_at}"

@@ -258,12 +258,7 @@ const LecturesPageBuilder = () => {
             <div className="absolute top-4 right-4 bg-black bg-opacity-50 text-white px-3 py-1 rounded-md">
               {formatTime(recordingTime)}
             </div>
-<<<<<<< HEAD
           )}
-=======
-          )} */}
-          
->>>>>>> dev
         </div>
         <div className="h-16 flex justify-center items-center">
           <AnimatePresence mode="wait">

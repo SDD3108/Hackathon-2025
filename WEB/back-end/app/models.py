@@ -98,3 +98,8 @@ class Favorite(models.Model):
 
     def __str__(self):
         return f"{self.user.email} - {self.lecture.title}"
+
+class Keyword(models.Model):
+    start_index= models.IntegerField()
+    end_index= models.IntegerField()
+    lecture = models.ForeignKey('Lecture', on_delete=models.CASCADE, related_name='keyword')

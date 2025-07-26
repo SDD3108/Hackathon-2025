@@ -211,7 +211,11 @@ const MainPageBuilder = () => {
               our unique project unites innovative technologies for educational
               purposes, especially in a everyday life of university students
             </h2>
+<<<<<<< HEAD
             <Button className="w-[171px] h-[55px] rounded-[46px] text-[28px] font-normal tracking-[-0.04em] bg-gradient-to-r from-[#4a90e2] to-[#77b6ff] cursor-pointer" onClick={() => router.push("/signin")}>
+=======
+            <Button className="w-[171px] h-[55px] rounded-[46px] text-[28px] font-[500] tracking-[-0.04em] bg-gradient-to-r from-[#4a90e2] to-[#77b6ff] cursor-pointer">
+>>>>>>> dev
               sign in{" "}
               <svg
                 width="40"

@@ -5,7 +5,7 @@
   --breakpoint-2sm: 32rem;
   --color-accentColor: #4a90e2;
   --color-mainColor: #1c1c1c;
-  --color-bgColor:#2363b2;
+  --color-bgColor: #2363b2;
   --color-newWhite: #d9d9d9;
   --color-glassBg: rgba(255, 255, 255, 0.06);
   --shadow-custom: inset 2px 2px 2px 0 #fff,
@@ -16,6 +16,7 @@
   --color-secondBlue: #0a2139;
   --color-thirdBlue: #0042c2;
   --color-firstGray: #a0a0a0;
+<<<<<<< HEAD
   --color-secondGray:#d3d3d3;
   --shadow-singin: 4px 0 4px 4px rgba(0, 0, 0, 0.15);
   --color-bgPrimary:#8FBFFA;
@@ -30,6 +31,22 @@
   --color-thirdGray:rgba(60, 60, 67, 0.3);
   --color-fourthGray:#969696;
   --color-fifthGray: #1a1a1a;
+=======
+  --color-secondGray: #d3d3d3;
+  --shadow-signin: 4px 0 4px 4px rgba(0, 0, 0, 0.15);
+  --color-bgPrimary: #8fbffa;
+  --color-bgSecondary: #e0e0e0;
+  --color-placeholder: #d3d3d3;
+  --color-mainBlue: #2363b2;
+  --color-textDark: #333333;
+  --color-textGray: #666666;
+  --color-separator: #a6a6a8;
+  --color-buttonColor: #4a90e2;
+  --color-textLightgray: #a9a9a9;
+  --color-thirdGray: rgba(60, 60, 67, 0.3);
+  --color-fourthGray: #969696;
+  --color-fifthGray: #3c3c434d;
+>>>>>>> dev
   --color-textGradient: rgba(102, 102, 102, 0.76);
 }
 @font-face {

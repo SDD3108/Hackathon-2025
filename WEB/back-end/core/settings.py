@@ -15,6 +15,11 @@ import os
 from decouple import config
 import dj_database_url
 from google.oauth2 import service_account
+from storages.backends.gcloud import GoogleCloudStorage
+
+
+
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -43,6 +48,7 @@ CORS_ALLOW_ALL_ORIGINS = True
 #     "https://anothergenback.onrender.com",
 #     "https://hackathon-2025-six.vercel.app",
 # ]
+
 CORS_ALLOW_CREDENTIALS = True
 # Для защищённых запросов с куками/авторизацией:
 # CSRF_TRUSTED_ORIGINS = [
@@ -112,21 +118,43 @@ DATABASES = {
     }
 }
 
-VERTEX_PROJECT = config('VERTEX_PROJECT')
-VERTEX_LOCATION = config('VERTEX_LOCATION')
-VERTEX_BUCKET = config('VERTEX_BUCKET')
-VERTEX_SERVICE_ACCOUNT_FILE = os.path.join(BASE_DIR, config('VERTEX_SERVICE_ACCOUNT_FILE'))
+# VERTEX_PROJECT = config('VERTEX_PROJECT')
+# VERTEX_LOCATION = config('VERTEX_LOCATION')
+# VERTEX_BUCKET = config('VERTEX_BUCKET')
+# VERTEX_SERVICE_ACCOUNT_FILE = os.path.join(BASE_DIR, config('VERTEX_SERVICE_ACCOUNT_FILE'))
 
 
-DEFAULT_FILE_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage'
-GS_BUCKET_NAME = config('VERTEX_BUCKET')  # lecture-videos-bucket
+# DEFAULT_FILE_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage'
+# GS_BUCKET_NAME = config('VERTEX_BUCKET')  # lecture-videos-bucket
+# GS_PROJECT_ID = config("VERTEX_PROJECT")  # your-project-id
+# GS_LOCATION = config("VERTEX_LOCATION")
+# GS_FILE_OVERWRITE = False  # Prevent overwriting files with the same name
+# GS_DEFAULT_ACL = 'publicRead'  # Make files publicly accessible
+# MEDIA_URL = f'https://storage.googleapis.com/{GS_BUCKET_NAME}/'
+# GOOGLE_APPLICATION_CREDENTIALS = os.path.join(BASE_DIR, config('VERTEX_SERVICE_ACCOUNT_FILE'))
+
 GS_CREDENTIALS = service_account.Credentials.from_service_account_file(
     os.path.join(BASE_DIR, config('VERTEX_SERVICE_ACCOUNT_FILE'))
 )
+# DEFAULT_FILE_STORAGE = 'gcloud.GoogleCloudMediaFileStorage'
+GS_PROJECT_ID = config("VERTEX_PROJECT")  # your-project-id
+GS_BUCKET_NAME = config('VERTEX_BUCKET')  # lecture-videos-bucket
+MEDIA_URL = f'https://storage.googleapis.com/{GS_BUCKET_NAME}/'
 
+STORAGES = {
+            "default": {
+                "BACKEND": "storages.backends.gcloud.GoogleCloudStorage",
+                "OPTIONS": {
+                    "bucket_name": GS_BUCKET_NAME,
+                    "credentials": GS_CREDENTIALS,
+                },
+            },
+            "staticfiles": {
+                "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
+            },
+            }
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
-
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -161,9 +189,6 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
-MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / 'media'
-
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
@@ -191,5 +216,3 @@ DJOSER = {
     'SEND_CONFIRMATION_EMAIL': False,
 }
 
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

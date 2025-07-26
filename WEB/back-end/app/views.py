@@ -105,10 +105,9 @@ from .models import Lecture, TimePoint, Schedule, User, Subject, Group
 # Используйте переменные окружения для безопасного хранения ключей
 # api_key = os.getenv('GEMINI_API_KEY')
 api_key = 'AIzaSyDS5cyaLf35kxxRhH-vL_OIFu1J9A29KHk'
-genai.configure(api_key=api_key)
-model = genai.GenerativeModel("gemini-2.5-flash")
 
 
+ 
 # --- Настройка Google Cloud Storage ---
 GCS_BUCKET_NAME = "lecture-videos-bucket"
 storage_client = storage.Client()
@@ -138,6 +137,10 @@ class LectureCreateView(APIView):
         return Response(data, status=status.HTTP_200_OK)
 
     def post(self, request, *args, **kwargs):
+        genai.configure(api_key=api_key)
+        model = genai.GenerativeModel("gemini-2.5-flash")
+
+        
         video_file = request.data.get('video')
         user_id = request.data.get('user_id')
         date = request.data.get('date')  # Ожидаем дату в формате YYYY-MM-DD
@@ -166,7 +169,7 @@ class LectureCreateView(APIView):
             blob.upload_from_file(video_file, content_type='video/mp4')
             
             # Получаем публичный URL файла в GCS
-            video_url = f"https://storage.googleapis.com/{GCS_BUCKET_NAME}/{file_name}"
+            video_url = f"https://storage.cloud.google.com/{GCS_BUCKET_NAME}/{file_name}"
             print(f"Файл успешно загружен. URL: {video_url}")
 
             # 2. Формируем промпт для Gemini

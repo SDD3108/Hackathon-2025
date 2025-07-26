@@ -170,11 +170,11 @@ class LectureCreateView(APIView):
             video_url = f"https://storage.cloud.google.com/{GCS_BUCKET_NAME}/{file_name}"
             print(f"Файл успешно загружен. URL: {video_url}")
 
-            blob = bucket.blob(video_url)
+            blob2 = bucket.blob(video_url)
 
             # # Используем BytesIO для сохранения данных в памяти
             video_bytes_stream = BytesIO()
-            blob.download_to_file(video_bytes_stream)
+            blob2.download_to_file(video_bytes_stream)
             video_bytes_stream.seek(0) 
 
             

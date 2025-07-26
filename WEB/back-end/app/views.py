@@ -102,20 +102,19 @@ from rest_framework.parsers import MultiPartParser, FormParser
 from django.conf import settings
 from google.cloud import storage
 import uuid
-from decouple import config
-
 
 # Импорт моделей Django
-from .models import Lecture, TimePoint, Subject, User  # Замените 'Teacher' на вашу модель пользователя
+from .models import Lecture, TimePoint, Schedule, User, Subject, Group
 
 # --- Настройка Google Gemini API ---
+# Используйте переменные окружения для безопасного хранения ключей
+# api_key = os.getenv('GEMINI_API_KEY')
 api_key = 'AIzaSyDS5cyaLf35kxxRhH-vL_OIFu1J9A29KHk'
 genai.configure(api_key=api_key)
 model = genai.GenerativeModel("gemini-2.5-flash")
 
 import os
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = config('VERTEX_SERVICE_ACCOUNT_FILE')
-
 # --- Настройка Google Cloud Storage ---
 GCS_BUCKET_NAME = "lecture-videos-bucket"
 storage_client = storage.Client()
@@ -124,25 +123,27 @@ bucket = storage_client.bucket(GCS_BUCKET_NAME)
 class LectureCreateView(APIView):
     """
     Принимает видеофайл, загружает его в GCS, анализирует с помощью Gemini API,
-    и сохраняет транскрипцию и метаданные в базу данных.
+    и сохраняет транскрипцию и расписание в базу данных.
     """
     parser_classes = (MultiPartParser, FormParser)
 
     def post(self, request, *args, **kwargs):
         video_file = request.data.get('video')
-        subject_id = request.data.get('subject_id')
-        teacher_id = request.data.get('teacher_id')
+        user_id = request.data.get('user_id')
+        date = request.data.get('date')  # Ожидаем дату в формате YYYY-MM-DD
+        group_id = request.data.get('group_id')
+        is_double = request.data.get('is_double')
 
-        if not all([video_file, subject_id, teacher_id]):
+        if not all([video_file, user_id, date, group_id]):
             return Response(
-                {"error": "Файл 'video', 'subject_id' и 'teacher_id' обязательны."},
+                {"error": "Файл 'video', 'user_id', 'date' и 'group_id' обязательны."},
                 status=status.HTTP_400_BAD_REQUEST
             )
         
         try:
-            # Получение объектов Subject и Teacher
-            subject = Subject.objects.get(id=subject_id)
-            teacher = User.objects.get(id=teacher_id)
+            # Получение объектов User, Group
+            teacher = User.objects.get(id=user_id, is_teacher=True)
+            group = Group.objects.get(id=group_id)
 
             # 1. Загрузка файла в GCS
             file_name = f"videos/{uuid.uuid4()}_{video_file.name}"
@@ -182,12 +183,11 @@ class LectureCreateView(APIView):
             # Создание новой записи о лекции
             lecture = Lecture.objects.create(
                 title=title,
-                subject=subject,
                 teacher=teacher,
                 lecture_text=transcription,
-                video_url=video_url  # Сохраняем URL видео
+                video=video_file  # Сохраняем файл в поле FileField
             )
-
+            
             # Создание временных меток
             for time_point_str in time_points_data:
                 try:
@@ -198,27 +198,37 @@ class LectureCreateView(APIView):
                         name=description.strip()
                     )
                 except ValueError:
-                    # Обработка некорректного формата временной метки
                     print(f"Пропущена некорректная временная метка: {time_point_str}")
+
+            # 5. Сохранение расписания
+            schedule_entry = Schedule.objects.create(
+                group=group,
+                lecture=lecture,
+                date=date,  # Сохраняем дату, переданную в запросе
+                is_double=is_double  # Сохраняем is_double
+            )
 
             # Возвращаем успешный ответ
             return Response(
-                {"message": "Видео успешно загружено, проанализировано и сохранено в БД.", "lecture_id": lecture.id},
+                {
+                    "message": "Видео успешно загружено, проанализировано и сохранено в БД.",
+                    "lecture_id": lecture.id,
+                    "schedule_id": schedule_entry.id
+                },
                 status=status.HTTP_201_CREATED
             )
 
-        except Subject.DoesNotExist:
-            return Response(
-                {"error": f"Предмет с ID {subject_id} не найден."},
-                status=status.HTTP_404_NOT_FOUND
-            )
         except User.DoesNotExist:
             return Response(
-                {"error": f"Преподаватель с ID {teacher_id} не найден."},
+                {"error": f"Преподаватель с ID {user_id} не найден или не является преподавателем."},
+                status=status.HTTP_404_NOT_FOUND
+            )
+        except Group.DoesNotExist:
+            return Response(
+                {"error": f"Группа с ID {group_id} не найдена."},
                 status=status.HTTP_404_NOT_FOUND
             )
         except Exception as e:
-            # Обработка возможных ошибок
             return Response(
                 {"error": f"Произошла ошибка: {e}"},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR

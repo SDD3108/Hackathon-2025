@@ -109,6 +109,7 @@ const LecturesPageBuilder = () => {
               <span className="text-red-500 font-medium">Идет запись</span>
             </div>
           )} */}
+          
         </div>
         <div className="h-16 flex justify-center items-center">
           <AnimatePresence mode="wait">

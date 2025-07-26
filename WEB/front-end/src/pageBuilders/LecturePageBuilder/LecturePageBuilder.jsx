@@ -20,6 +20,8 @@ import useAuthenticationStore from '@/src/store/AuthenticationStore/Authenticati
 import { tokenDecoder } from '@/src/utils/tokenDecoder/tokenDecoder'
 import { GetDatasApi } from '@/src/utils/GetDatasApi/GetDatasApi'
 
+// когда полностью прийдет content с иишки (полный текст) мы должны типо понемногу по каждой букве отрисовывать текст как будто он прям сейчас на экране печатается иишкой
+
 // 4 lectures
 const LecturePageBuilder = ({ params }) => {
   const { user } = useAuthenticationStore()
@@ -206,6 +208,7 @@ const LecturePageBuilder = ({ params }) => {
     
     return result
   }
+  
   // Обработка наведения на выделенное слово
   useEffect(()=>{
     if(currentUser?.is_student || !contentRef.current){

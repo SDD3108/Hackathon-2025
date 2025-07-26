@@ -120,6 +120,22 @@ class LectureCreateView(APIView):
     и сохраняет транскрипцию и расписание в базу данных.
     """
     parser_classes = (MultiPartParser, FormParser)
+    def get(self, request, *args, **kwargs):
+        """
+        Возвращает список всех лекций (или можно реализовать другую логику по необходимости).
+        """
+        lectures = Lecture.objects.all()
+        data = []
+        for lecture in lectures:
+            data.append({
+                "id": lecture.id,
+                "title": lecture.title,
+                "teacher": lecture.teacher.email if lecture.teacher else None,
+                "lecture_text": lecture.lecture_text,
+                "video": lecture.video.url if lecture.video else None,
+                "created_at": lecture.created_at,
+            })
+        return Response(data, status=status.HTTP_200_OK)
 
     def post(self, request, *args, **kwargs):
         video_file = request.data.get('video')

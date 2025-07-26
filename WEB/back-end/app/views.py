@@ -6,6 +6,14 @@ from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.views import APIView
 from rest_framework import status
 from rest_framework.response import Response
+from decouple import config
+import json
+from google.cloud import storage
+import uuid
+from google import genai
+from google.genai.types import Part
+from io import BytesIO
+import os
 from .models import Group, Subject, Lecture, Schedule, User, TimePoint, Favorite
 from .serializers import (
     GroupSerializer,
@@ -13,13 +21,10 @@ from .serializers import (
     LectureSerializer,
     ScheduleSerializer,
     UserSerializer,
-    # LectureCreateSerializer,
     FavoriteSerializer,
     TimePointSerializer
 )
-# from .vertex_ai import analyze_lecture_video, upload_to_gcs
-from decouple import config
-import os
+
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = config('VERTEX_SERVICE_ACCOUNT_FILE')
 
 class GroupViewSet(viewsets.ModelViewSet):
@@ -88,18 +93,10 @@ class FavoriteViewSet(viewsets.ModelViewSet):
         return queryset
 
 
-import google.generativeai as genai
-import json
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework import status
-from rest_framework.parsers import MultiPartParser, FormParser
-from django.conf import settings
-from google.cloud import storage
-import uuid
+
+
 
 # Импорт моделей Django
-from .models import Lecture, TimePoint, Schedule, User, Subject, Group
 
 # --- Настройка Google Gemini API ---
 # Используйте переменные окружения для безопасного хранения ключей
@@ -137,8 +134,7 @@ class LectureCreateView(APIView):
         return Response(data, status=status.HTTP_200_OK)
 
     def post(self, request, *args, **kwargs):
-        genai.configure(api_key=api_key)
-        model = genai.GenerativeModel("gemini-2.5-flash")
+        client = genai.Client(api_key=api_key)
 
         
         video_file = request.data.get('video')
@@ -172,25 +168,39 @@ class LectureCreateView(APIView):
             video_url = f"https://storage.cloud.google.com/{GCS_BUCKET_NAME}/{file_name}"
             print(f"Файл успешно загружен. URL: {video_url}")
 
-            # 2. Формируем промпт для Gemini
-            prompt = f"""
-# Analyze this full lecture video and provide:
-# 1. A suitable title for the lecture (max 100 characters)
-# 2. A complete transcription of the lecture
-# 3. Time points in the format: MM:SS Description
-# Return the response in JSON format.
-# Video path: {video_url}
-# """
+            bucket = storage_client.bucket(GCS_BUCKET_NAME)
+            blob = bucket.blob(video_url)
+
+            # # Используем BytesIO для сохранения данных в памяти
+            video_bytes_stream = BytesIO()
+            blob.download_to_file(video_bytes_stream)
+            video_bytes_stream.seek(0) 
+
+            
             
             # 3. Отправляем запрос в Gemini
             print("Генерация контента из видео...")
-            response = model.generate_content(
-                contents=[prompt],
-                generation_config={"response_mime_type": "application/json"}
+            response = client.models.generate_content(
+                model='gemini-2.5-flash',
+                contents=[
+                Part.from_bytes(
+                    data=video_bytes_stream.getvalue(),
+                    mime_type='video/mp4',
+                ),
+                """
+Analyze this lecture video and provide:
+1. A suitable title for the lecture (max 100 characters)
+2. A complete transcription of the lecture on english. Please ignore and exclude filler words
+3. Time points in the format: MM:SS Description
+Return the response in JSON format.
+            """
+                ]
             )
             
             try:
-                json_response = json.loads(response.text)
+                res = str(response.text)
+                cleaned_response = res[7:-3]
+                json_response = json.loads(cleaned_response)
             except Exception as e:
                 return Response({"error": f"Ошибка парсинга JSON от Gemini: {e}", "raw": response.text}, status=500)
             

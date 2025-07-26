@@ -110,6 +110,7 @@ const LecturesPageBuilder = () => {
             </div>
           )} */}
         </div>
+        
         <div className="h-16 flex justify-center items-center">
           <AnimatePresence mode="wait">
             {recordingState == 'idle' && (

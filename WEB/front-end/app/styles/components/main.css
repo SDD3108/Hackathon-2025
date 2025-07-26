@@ -30,6 +30,7 @@
   --color-thirdGray: rgba(60, 60, 67, 0.3);
   --color-fourthGray: #969696;
   --color-fifthGray: #3c3c434d;
+  --color-textGradient: rgba(102, 102, 102, 0.76);
 }
 @font-face {
   font-family: "SF Pro Display";

@@ -14,6 +14,7 @@ const useAuthenticationStore = create((set)=>({
     try{
       const response = await axios.post(USERS_API,userData,
         {
+          mode:"no-cors",
           headers: { 'Content-Type': 'application/json' }
         }
       )
@@ -31,7 +32,7 @@ const useAuthenticationStore = create((set)=>({
     // console.log(USERS_API);
     // console.log(USER_LOGIN);
     try {
-      const response = await axios.post(USER_LOGIN,userData)
+      const response = await axios.post(USER_LOGIN,userData,{mode:"no-cors",})
       const token = response.data.access
       localStorage.setItem('token',JSON.stringify(token))
       set({user:token, loading:false})

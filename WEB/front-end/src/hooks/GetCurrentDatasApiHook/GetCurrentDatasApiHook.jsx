@@ -5,7 +5,9 @@ const FAVORITES_API = process.env.VITE_NEXT_PUBLIC_FAVORITES_API
 
 const getCurrentUser = async(userId) => {
   try{
-    const response = await axios.get(`${USERS_API}${userId}`)
+    const response = await axios.get(`${USERS_API}${userId}`,{
+      mode:"no-cors",
+    })
     return response.data
   }
   catch(error){
@@ -15,7 +17,9 @@ const getCurrentUser = async(userId) => {
 }
 const getGroupMembers = async(groupId)=>{
   try{
-    const response = await axios.get(`${USERS_API}`)
+    const response = await axios.get(`${USERS_API}`,{
+      mode:"no-cors",
+    })
     return response.data.filter((user) => user.classId == groupId)
   }
   catch(error){
@@ -25,7 +29,9 @@ const getGroupMembers = async(groupId)=>{
 } 
 const getFavoriteLectures = async(userId)=>{
   try{
-    const response = await axios.get(`${FAVORITES_API}?userId=${userId}`)
+    const response = await axios.get(`${FAVORITES_API}?userId=${userId}`,{
+      mode:"no-cors",
+    })
     return response.data.map((item) => item.lectureId)
   }
   catch(error){

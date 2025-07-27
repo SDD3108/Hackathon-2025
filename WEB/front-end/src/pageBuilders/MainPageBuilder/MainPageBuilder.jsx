@@ -249,7 +249,7 @@ const MainPageBuilder = () => {
               style={{
                 background: 'linear-gradient(to right, var(--color-medium-blue), var(--color-very-light-blue))'
               }}
-              onClick={() => router.push("/SignIn")}
+              onClick={() => router.push("/signin")}
             >
               Sign in
               <svg width="2.5rem" height="2.5rem" viewBox="0 0 35 35" fill="none" xmlns="http://www.w3.org/2000/svg">

@@ -58,7 +58,9 @@ const LecturesPageBuilder = () => {
     const getGroups = async()=>{
       try {
         const URL_API = process.env.NEXT_PUBLIC_API_URL
-        const resp = await axios.get(`${URL_API}/api/groups`)
+        const resp = await axios.get(`${URL_API}/api/groups/`,{
+          mode:"no-cors",
+        })
         setApiGroups(resp.data)
       }
       catch(error){

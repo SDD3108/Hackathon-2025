@@ -39,7 +39,9 @@ const ProfilePageBuilder = () => {
         const LECTURES_API = `${process.env.NEXT_PUBLIC_API_URL}/api/lectures/`
         
         // Получаем данные пользователя
-        const userResponse = await axios.get(USERS_API)
+        const userResponse = await axios.get(USERS_API,{
+          mode:"no-cors",
+        })
         const currentUser = userResponse.data.find(u => u.id === userId)
         
         if (currentUser) {
@@ -51,7 +53,9 @@ const ProfilePageBuilder = () => {
           
           // Получаем данные группы пользователя
           if (currentUser.classId) {
-            const groupMembersResponse = await axios.get(USERS_API)
+            const groupMembersResponse = await axios.get(USERS_API,{
+              mode:"no-cors",
+            })
             const members = groupMembersResponse.data.filter(u => 
               u.classId === currentUser.classId && u.id !== userId
             )
@@ -60,7 +64,9 @@ const ProfilePageBuilder = () => {
         }
         
         // Получаем лекции
-        const lecturesResponse = await axios.get(LECTURES_API)
+        const lecturesResponse = await axios.get(LECTURES_API,{
+          mode:"no-cors",
+        })
         setLectures(lecturesResponse.data)
         
       } catch (error) {
@@ -99,7 +105,9 @@ const ProfilePageBuilder = () => {
       // Отправляем обновленные данные на сервер
       const response = await axios.put(
         `${process.env.NEXT_PUBLIC_API_URL}/api/users/${user.id}`, 
-        updatedData
+        updatedData,{
+          mode:"no-cors",
+        }
       )
       
       // Обновляем состояние

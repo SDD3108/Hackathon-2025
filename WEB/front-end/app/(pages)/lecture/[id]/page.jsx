@@ -1,10 +1,10 @@
 import React from 'react'
 import LecturePageBuilder from '@/src/pageBuilders/LecturePageBuilder/LecturePageBuilder'
 
-const page = () => {
+const page = ({params}) => {
   return (
     <div>
-      <LecturePageBuilder params/>
+      <LecturePageBuilder params={params}/>
     </div>
   )
 }

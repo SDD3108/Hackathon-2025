@@ -51,7 +51,9 @@ const AdminPageBuilder = () => {
     const fetchGroups = async()=>{
       try{
         setLoading(true);
-        const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/groups/`)
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/groups/`,{
+          mode:"no-cors",
+        })
         setGroups(response.data)
       }
       catch(error){
@@ -95,6 +97,8 @@ const AdminPageBuilder = () => {
         is_teacher: userForm.isTeacher,
         classId: userForm.groupId,
         subjectId: "4"
+      },{
+        mode:"no-cors",
       })
 
       toast.success("User added successfully!")
@@ -127,9 +131,13 @@ const AdminPageBuilder = () => {
         title: groupForm.title,
         grade: groupForm.grade,
       }
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/groups/`,group)
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/groups/`,group,{
+        mode:"no-cors",
+      })
       toast.success("Group added successfully!")
-      const groupsResponse = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/groups/`)
+      const groupsResponse = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/groups/`,{
+        mode:"no-cors",
+      })
       setGroups(groupsResponse.data)
       setGroupForm({
         title: "",

@@ -35,6 +35,12 @@ class LectureSerializer(serializers.ModelSerializer):
         model = Lecture
         fields = '__all__' 
 
+from .models import Keyword
+
+class KeywordSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Keyword
+        fields = '__all__'
 
 
 class ScheduleSerializer(serializers.ModelSerializer):

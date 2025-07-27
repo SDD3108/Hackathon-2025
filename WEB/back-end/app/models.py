@@ -103,3 +103,4 @@ class Keyword(models.Model):
     start_index= models.IntegerField()
     end_index= models.IntegerField()
     lecture = models.ForeignKey('Lecture', on_delete=models.CASCADE, related_name='keyword')
+

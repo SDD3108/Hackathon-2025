@@ -5,7 +5,7 @@ from django.urls import include
 from django.conf import settings
 from django.conf.urls.static import static
 from rest_framework.routers import DefaultRouter
-from app.views import GroupViewSet, SubjectViewSet, LectureViewSet, ScheduleViewSet, UserView, FavoriteViewSet, LectureCreateView, TimePointViewSet
+from app.views import GroupViewSet, SubjectViewSet, LectureViewSet, ScheduleViewSet, UserView, FavoriteViewSet, LectureCreateView, TimePointViewSet, KeywordViewSet
 # LectureCreateView
 
 router = DefaultRouter()
@@ -16,6 +16,8 @@ router.register(r'schedules', ScheduleViewSet, basename='schedule')
 router.register(r'favorites', FavoriteViewSet, basename='favorite')
 router.register(r'users', UserView, basename='user')
 router.register(r'timepoints', TimePointViewSet, basename='timepoint')
+router.register(r'keywords', KeywordViewSet, basename='keyword')
+
 
 
 

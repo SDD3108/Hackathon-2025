@@ -4,7 +4,7 @@ import AdminPageBuilder from '@/src/pageBuilders/AdminPageBuilder/AdminPageBuild
 const adminPage = () => {
   return (
     <div>
-        <AdminPageBuilder/>
+      <AdminPageBuilder/>
     </div>
   )
 }

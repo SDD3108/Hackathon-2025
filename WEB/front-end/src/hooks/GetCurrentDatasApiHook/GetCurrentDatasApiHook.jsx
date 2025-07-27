@@ -15,7 +15,7 @@ const getCurrentUser = async(userId) => {
 }
 const getGroupMembers = async(groupId)=>{
   try{
-    const response = await axios.get(USERS_API)
+    const response = await axios.get(`${USERS_API}`)
     return response.data.filter((user) => user.classId == groupId)
   }
   catch(error){

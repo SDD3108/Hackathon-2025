@@ -78,12 +78,8 @@ class Schedule(models.Model):
     date = models.DateField(auto_now_add=True)
 
 
-    def get_dayOfWeek_display(self):
-        # Mimic Django's get_FOO_display for custom CharField with choices
-        return dict(self.DAYS_OF_WEEK).get(self.dayOfWeek, self.dayOfWeek)
-
     def __str__(self):
-        return f'{self.subject.name} - {self.group.name} - {self.get_dayOfWeek_display()}'
+        return f'{self.group.name}'
 
 
 class Favorite(models.Model):

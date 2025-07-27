@@ -39,7 +39,6 @@ class UserView(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
-from rest_framework import viewsets
 from .models import Keyword
 from .serializers import KeywordSerializer
 

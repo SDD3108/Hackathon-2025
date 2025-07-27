@@ -31,11 +31,7 @@ const useAuthenticationStore = create((set)=>({
     // console.log(USERS_API);
     // console.log(USER_LOGIN);
     try {
-      const response = await axios.post(USER_LOGIN,userData,
-        {
-          headers: { 'Content-Type': 'application/json' }
-        }
-      )
+      const response = await axios.post(USER_LOGIN,userData)
       const token = response.data.access
       localStorage.setItem('token',JSON.stringify(token))
       set({user:token, loading:false})

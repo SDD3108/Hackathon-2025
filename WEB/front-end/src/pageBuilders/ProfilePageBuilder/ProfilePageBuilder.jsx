@@ -26,9 +26,9 @@ const ProfilePageBuilder = () => {
   const [users, setUsers] = useState([])
   const [groupMembers, setGroupMembers] = useState([])
   const [lectures, setLectures] = useState([])
-  
-  const authUser = useAuthenticationStore(state => state.user)
-  const token = authUser || localStorage.getItem('token')
+  const [token,setToken] = useState(null)
+  const authUser = useAuthenticationStore()
+  // const token = authUser || localStorage.getItem('token')
   const userId = token ? tokenDecoder(token) : null
 
   useEffect(() => {
@@ -70,7 +70,7 @@ const ProfilePageBuilder = () => {
         setIsLoading(false)
       }
     }
-
+    setToken(authUser || localStorage.getItem('token'))
     if (userId) {
       loadUserData()
     }
